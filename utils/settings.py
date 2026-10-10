@@ -57,3 +57,17 @@ def load_route_data():
            for key in required):
         raise ValueError("Fill route queries and exact results in the booking section.")
     return {key: booking[key] for key in required}
+
+
+def load_time_vehicle_data():
+    """Only allow the assignment's four-hour Van choice and a valid future slot."""
+    from utils.pickup_plan import build_pickup_plan
+
+    booking = _load_private_test_data().get("booking")
+    if not isinstance(booking, dict) or not isinstance(booking.get("pickup"), dict):
+        raise ValueError("Fill booking.pickup in the local test data.")
+    if booking.get("rental_hours") != 4 or booking.get("vehicle") != "Van":
+        raise ValueError("This assignment requires rental_hours: 4 and vehicle: Van.")
+    pickup = booking["pickup"]
+    plan = build_pickup_plan(pickup.get("days_ahead"), pickup.get("time_24h"))
+    return plan, booking["rental_hours"], booking["vehicle"]

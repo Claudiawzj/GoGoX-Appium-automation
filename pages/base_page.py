@@ -7,6 +7,7 @@ from selenium.common.exceptions import StaleElementReferenceException
 class BasePage:
     def __init__(self, driver, wait_seconds=30):
         self.driver = driver
+        self.wait_seconds = wait_seconds
         self.wait = WebDriverWait(driver, wait_seconds,
                                   ignored_exceptions=(StaleElementReferenceException,))
 

@@ -9,8 +9,10 @@ walkthrough and actual verification records.
 Existing-account email login also passed on the iPhone: **1 passed in 24.24 seconds**.
 It confirms the Personal account menu after login; registration and booking remain pending.
 The route checkpoint passed too: **1 passed in 22.94 seconds**, selecting the exact
-IFC Mall → Harbour City addresses and reaching Time and vehicle. Future pickup time,
-four-hour rental, extras, review/tip and fresh registration remain pending.
+IFC Mall → Harbour City addresses and reaching Time and vehicle. The time/vehicle
+checkpoint passed: **1 passed in 20.84 seconds**, future pickup, four-hour rental
+and Van verified before Next to Order details. Extras, review/tip and fresh registration
+remain pending. Ten calendar/configuration tests also passed.
 
 ## Selected tools
 
@@ -138,10 +140,32 @@ saved address; it does not tap Done during that transition. Home field locators
 distinguish the pickup and destination cells, and exact result names are external
 data so shops inside the mall cannot be silently selected instead.
 
+The time/vehicle checkpoint starts at Time and vehicle with the approved route
+already saved. It selects a pickup two days ahead at 14:00 in Hong Kong time,
+four-hour rental and Van, verifies all three and taps Next. It ends at Order details
+with Cargo compensation visible. It does not select Basic or any extras yet.
+
+```bash
+.venv/bin/python -m pytest tests/test_time_vehicle.py --device --html=reports/time-vehicle.html --self-contained-html
+.venv/bin/python -m pytest tests/test_pickup_plan.py
+```
+
+`booking.pickup.days_ahead` and `time_24h` externalize the pickup plan. The date is
+recalculated for each run in Asia/Hong_Kong, and invalid/past-day or non-ten-minute
+slots fail rather than use ASAP. Device selectors require the English UI. iOS picker
+times use a narrow nonbreaking space before am/pm; the picker action supplies that
+exact format, while assertions normalize spacing. Van is verified using the check
+mark inside its own card, not a check mark anywhere on screen.
+
+The time/vehicle page's Next button has a shared internal ID containing review_order.
+Its action is scoped to the Time and vehicle title and verified selections. Do not
+reuse it as a generic footer action or order-submission command.
+
 Run checkpoint tests individually in their stated starting screens. They are not
 yet a complete suite with automated state setup; do not run all device tests as
 proof of the full assignment flow. To repeat the route checkpoint after it passes,
 tap Back from Time and vehicle to return to home.
+To repeat the time/vehicle checkpoint, tap Back from Order details to Time and vehicle.
 
 Reserve the unused email for the final recorded full-flow attempt. During development,
 inspect registration without submitting it and exercise login/booking with an existing

@@ -176,6 +176,34 @@ Checkpoint tests require their documented starting screens and are run individua
 The route test deliberately replaces both route fields; to repeat it, return to home
 using Back. The full new-account-to-review flow and recording remain incomplete.
 
+## Future pickup, four-hour rental and Van checkpoint — 10 October 2026
+
+Observed two native wheels for pickup date/time and one for hourly rental. Native
+time values use a narrow nonbreaking space before am/pm; the first plain-space attempt
+did not select 14:00. Supplied the exact native format and verified the wheel values
+and saved summary. This is an automation formatting correction, not an app defect.
+
+External configuration now includes pickup.days_ahead: 2, time_24h: "14:00",
+rental_hours: 4 and vehicle: Van. Each run calculates its future date in Hong Kong
+time, so it remains reusable. On this run the selected pickup was **12 October 2026,
+2:00 PM HKT**. App confirmed **4 hours** and the check mark within the **Van** card.
+The code verifies all selections before tapping Next from this specific page.
+
+Created PickupPage, expanded TimeVehiclePage and a read-only OrderDetailsPage endpoint,
+with separate locator files. Device checkpoint **1 passed in 20.84 seconds**, ending
+at Order details with Cargo compensation visible. No Basic/extras/contact/tip actions
+occurred. The phone is now on Order details; no order was placed or new account created.
+Evidence: reports/time-vehicle.html and reports/time-vehicle-console.log, kept local.
+
+Ten independent calendar/configuration checks passed, covering year rollover, leap
+year, converting UTC to Hong Kong before choosing the date, invalid configuration
+and iOS spacing. These tests run without the device and do not prove the full flow.
+
+To repeat this device checkpoint, tap Back to Time and vehicle. Login, route and
+time/vehicle checkpoint tests still have separate starting-screen requirements.
+Next: inspect/select Basic $10 and all required extras. Full registration-to-review
+automation, $20 tip, demo recording and submission remain incomplete.
+
 ## First task: connect the phone
 
 1. Connect the iPhone to this Mac with a USB data cable.

@@ -17,3 +17,9 @@ booking:
   from_result: "ifc mall, Finance Street, Central, Hong Kong"
   to_result: "Harbour City, Canton Road, Tsim Sha Tsui, Hong Kong"
   tunnel_preference: "Cross-Harbour Tunnel (Hung Hom)"
+  # Recalculated in Hong Kong time for each run; never pin a soon-expiring date.
+  pickup:
+    days_ahead: 2
+    time_24h: "14:00"
+  rental_hours: 4
+  vehicle: "Van"

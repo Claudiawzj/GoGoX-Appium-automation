@@ -48,7 +48,8 @@ assumptions/challenges/improvements, and a recording of a verified complete run.
   signed-out-to-signed-in checkpoint passed: 1 passed in 24.24 seconds. First attempt
   logged in but failed an incorrect menu assertion; GoGoX retains a disabled sign-in
   control. Corrected and verified on a deliberate retry after sign out.
-- Phone currently signed in at Time and vehicle. Never automatically retry passwords.
+- Phone currently signed in at Order details with Cargo compensation visible.
+  Never automatically retry passwords.
   Login test requires signed-out Transport home with empty route fields.
 - User approved IFC Mall → Harbour City and Cross-Harbour Tunnel (Hung Hom) for practice;
   exact mall search results inspected and saved in external data. Route checkpoint
@@ -69,9 +70,18 @@ assumptions/challenges/improvements, and a recording of a verified complete run.
   successful creation or an uncertain submission outcome. An existing-account run does
   not satisfy the assignment's new-account checkpoint. A fresh full-flow retry may need
   another unused email; GoGoX email reuse/deletion behavior has not been verified.
-- Future pickup date/time, 4-hour rental and explicit Van action/assertion are next.
-  Initial details screen showed Today/ASAP, Hourly rental No and Van highlighted;
-  defaults do not prove required settings. TimeVehiclePage only checks screen markers.
+- Future pickup, 4-hour rental and explicit Van action/assertion verified: 1 passed
+  in 20.84 seconds. Plan uses Hong Kong date plus two days at 14:00 (12 October 2026
+  for this run), calculated each execution. Calendar/configuration tests: 10 passed.
+- Time wheel requires narrow nonbreaking space before am/pm for actual selection.
+  Normalize UI spacing for assertions, and verify both wheel values and saved summary.
+  Plain-space input did not change the time during inspection; this is not an app bug.
+- PickupPage and TimeVehiclePage configure and verify all settings, then Next to
+  Order details. Van check mark is scoped to its own Cell, not a global check image.
+  The Next footer ID contains review_order but must only be used in verified Time
+  and vehicle context. No generic footer or order-submission action is implemented.
+- OrderDetailsPage currently only confirms title, Cargo compensation and Basic
+  markers. No compensation/extra selection actions yet. Next: Basic $10 and required extras.
 - Full booking test, other booking page objects and new registration remain pending.
 - Appium server restarted with warning-level logging (exec session 25011). Verify
   readiness before reuse. Typed credentials were absent from checked login reports
