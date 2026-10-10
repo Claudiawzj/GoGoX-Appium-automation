@@ -237,7 +237,9 @@ and the test restarted it, producing two visible launches.
 
 Login uses element.send_keys, not a clipboard or Paste action. The installed iPhone
 helper implements this as synthesized text input. A visible iOS Paste edit menu does
-not establish that the test pasted anything; its exact display trigger was not recorded.
+not establish that the test pasted anything. A controlled check reproduced it by
+tapping an already focused email field again. Login now leaves focus to send_keys
+and performs no separate field.click; the corrected login checkpoint passed.
 
 Van selection now waits for consecutive matching full-card rectangles and taps the
 Van Cell rather than its label, then checks card-check inside that same Van Cell.

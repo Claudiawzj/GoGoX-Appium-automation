@@ -12,14 +12,15 @@ class LoginPage(BasePage):
     def _type_private(self, locator, text):
         # The app exposes inputs as Other elements, not native TextField elements.
         field = self.visible_control(locator)
-        field.click()
-        self.wait.until(lambda session: session.is_keyboard_shown(),
-                        message="The keyboard did not appear for the login field.")
         try:
+            # WDA's text-entry action focuses the element when needed. A separate
+            # tap can repeat focus and open iOS's Paste/AutoFill editing menu.
             field.send_keys(text)
         except WebDriverException:
             # Driver exceptions can contain submitted text; keep it out of reports.
             raise RuntimeError("Could not type into the private login field.") from None
+        self.wait.until(lambda session: session.is_keyboard_shown(),
+                        message="The keyboard did not appear during login text entry.")
 
     def enter_existing_email(self, email):
         logging.info("STEP: Enter the existing-account email from private local data")

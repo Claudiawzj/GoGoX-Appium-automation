@@ -345,3 +345,34 @@ Latest reports/transport-booking.html, console log and final screenshot are from
 134-second success. Previous user failure saved to reports/transport-booking-van-failure.html;
 van-failure and van-card-corrected XML/screenshots remain private under reports/inspection.
 All evidence excluded from Git. Same manual test command remains valid.
+
+### Paste-menu investigation and login focus fix — 10 October 2026
+
+Temporarily signed out for a controlled email-field diagnostic using only
+focus-check@example.invalid. Dummy address was never submitted: no Next, signup
+or login action with it. Initial email screen had keyboard hidden and no Paste menu.
+One explicit tap opened keyboard without Paste. Original tap-plus-send_keys sequence
+had no menu in its post-action snapshots, so these snapshots do not prove that the
+helper made a second tap in the user's earlier run. A deliberate second tap on an
+already focused empty email field reproduced the Chinese Paste/AutoFill popup,
+confirmed in source and screenshot. send_keys alone on a fresh email screen typed
+the dummy address successfully without a separate explicit click.
+
+Installed WDA's fb_typeText calls fb_prepareForTextInputWithSnapshot, which taps if
+it cannot detect input focus. This provides a possible additional tap in the old
+path, but that internal branch was not recorded in the earlier user run. The
+controlled result supports the extra-focus-tap explanation without asserting an
+unobserved exact old sequence. No clipboard or Paste command was used.
+
+Removed field.click and the preceding keyboard wait from LoginPage._type_private.
+send_keys now owns focus; an explicit keyboard check follows typing. Existing secret-
+suppression behavior remains. Verified both existing email/password entry and Personal
+account confirmation: tests/test_login.py **1 passed in 21.59 seconds**. Restored the
+user's registered account after the experiment; no account created, booking or order
+submission. This was a login-only check, not another full booking run/demo video.
+
+Private evidence: reports/inspection/focus-second-explicit-tap.png/.xml,
+focus-typing-without-explicit-tap.png/.xml, initial/first-tap/post-typing captures and
+focus-comparison.json. Login report reports/login-single-focus.html and console log
+remain ignored. All credential checks passed before committing. Current task's
+next step remains fresh-registration implementation and full assignment recording.
