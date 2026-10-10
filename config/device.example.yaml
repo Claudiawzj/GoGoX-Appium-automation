@@ -1,0 +1,17 @@
+# Copy to device.local.yaml. Local values are excluded from delivery.
+server_url: http://127.0.0.1:4723
+wait_seconds: 30
+capabilities:
+  platformName: iOS
+  appium:automationName: XCUITest
+  appium:deviceName: iPhone 13 Pro
+  appium:platformVersion: "26.3"
+  appium:udid: ""
+  appium:bundleId: ""
+  appium:xcodeOrgId: ""
+  appium:xcodeSigningId: Apple Development
+  appium:updatedWDABundleId: ""
+  appium:noReset: true
+  appium:autoAcceptAlerts: false
+  appium:autoDismissAlerts: false
+  appium:newCommandTimeout: 120

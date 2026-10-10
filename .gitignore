@@ -1,0 +1,11 @@
+.venv/
+node_modules/
+.appium/
+.pytest_cache/
+__pycache__/
+*.pyc
+config/device.local.yaml
+config/data.local.yaml
+.env
+reports/*
+!reports/.gitkeep
