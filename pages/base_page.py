@@ -1,12 +1,14 @@
 """Shared explicit waits; fail rather than choose an ambiguous control."""
 
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import StaleElementReferenceException
 
 
 class BasePage:
     def __init__(self, driver, wait_seconds=30):
         self.driver = driver
-        self.wait = WebDriverWait(driver, wait_seconds)
+        self.wait = WebDriverWait(driver, wait_seconds,
+                                  ignored_exceptions=(StaleElementReferenceException,))
 
     def visible_control(self, locator):
         def find_unique_visible(session):

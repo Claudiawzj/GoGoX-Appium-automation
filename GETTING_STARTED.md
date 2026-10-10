@@ -141,6 +141,41 @@ User approved IFC Mall → Harbour City and Cross-Harbour Tunnel (Hung Hom) for 
 These choices are saved in the external data file; matching actual app search results
 and implementing route/booking pages are the next steps.
 
+## Route checkpoint — 10 October 2026
+
+The user confirmed the registered credentials are for login. The saved local file
+had reverted to the old registration-only layout; the cause was not established.
+Restored `login` with existing credentials, empty `registration`, and approved booking
+choices. The file was queued to reopen in Codex. If an editor shows the old layout,
+reload it before saving to avoid overwriting the saved configuration again.
+
+Inspected location search on the signed-in phone. The input is a native TextView.
+IFC search includes multiple mall/shop entries; the exact chosen result is
+`ifc mall, Finance Street, Central, Hong Kong`. The destination result is
+`Harbour City, Canton Road, Tsim Sha Tsui, Hong Kong`. Both are external test data.
+
+Selection returns to home automatically. During inspection, an early Done tap
+interrupted destination persistence. Corrected the action to wait for the selected
+full address in its home field without tapping Done. This is an automation timing
+correction; it does not establish a separate GoGoX defect. Home route fields use the
+first/second native table cells so pickup/destination are checked independently.
+
+Created LocationPage, route actions in HomePage, exact-result data loader and a
+read-only TimeVehiclePage checkpoint. Shared waits ignore transient stale elements
+while preserving the uniqueness check. Device test selected both locations, verified
+their full addresses and tapped Next: **1 passed in 22.94 seconds**. Evidence:
+reports/route.html and reports/route-console.log, kept local and ignored by Git.
+
+The phone is signed in at Time and vehicle. Future date/time, four-hour hourly rental
+and Van selection actions are the next implementation step. Inspection showed Today
+10 Oct, ASAP and Hourly rental: No; these defaults do not satisfy the assignment.
+Van appeared selected, but a required explicit selection/assertion still needs code.
+No order was placed and no new account was created.
+
+Checkpoint tests require their documented starting screens and are run individually.
+The route test deliberately replaces both route fields; to repeat it, return to home
+using Back. The full new-account-to-review flow and recording remain incomplete.
+
 ## First task: connect the phone
 
 1. Connect the iPhone to this Mac with a USB data cable.
@@ -168,8 +203,8 @@ The framework will use `pages`, `tests`, `utils`, `config`, and `reports`. No bo
 
 - Current device OS, GoGoX version and Hong Kong market.
 - New-account registration data and access to verification, if needed; distinguish any human verification step from automated steps.
-- Actual search results for the user-approved practice route IFC Mall → Harbour City.
-  This was not retained as the final route from the exploratory manual attempts.
+- Reuse the observed exact mall results for the user-approved practice route IFC Mall
+  → Harbour City. This was not retained as the final route from manual exploration.
 - Implement the approved Cross-Harbour Tunnel (Hung Hom) choice; availability still needs inspection.
 - Dummy contact details and a pickup date/time that remains future at execution.
 - Contact entry appears after Review Order in the manually tested version; record and implement the installed app's actual sequence without silently omitting contact entry.

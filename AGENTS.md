@@ -48,17 +48,31 @@ assumptions/challenges/improvements, and a recording of a verified complete run.
   signed-out-to-signed-in checkpoint passed: 1 passed in 24.24 seconds. First attempt
   logged in but failed an incorrect menu assertion; GoGoX retains a disabled sign-in
   control. Corrected and verified on a deliberate retry after sign out.
-- Phone currently signed in with menu open. Never automatically retry passwords.
+- Phone currently signed in at Time and vehicle. Never automatically retry passwords.
   Login test requires signed-out Transport home with empty route fields.
 - User approved IFC Mall → Harbour City and Cross-Harbour Tunnel (Hung Hom) for practice;
-  actual search results and booking controls remain uninspected.
+  exact mall search results inspected and saved in external data. Route checkpoint
+  passed: 1 passed in 22.94 seconds, ending at Time and vehicle. Full result names:
+  ifc mall, Finance Street, Central, Hong Kong; Harbour City, Canton Road, Tsim Sha Tsui, Hong Kong.
+- LocationPage selects exact results and waits for automatic home return/persisted
+  field value. Do not tap Done after selecting a result: an early tap interrupted
+  destination persistence during inspection. Do not call this a confirmed app bug.
+- Native home table's first/second Cell TextViews are pickup/destination. Search has
+  one TextView. Route test intentionally replaces fields; login/home-control tests
+  still require their documented empty-route/signed-out state. Run checkpoints separately.
+- Local file was found with old registration-only layout after the user's screenshot;
+  restored registered credentials to login and left registration empty. Cause unknown;
+  reload stale editor content before saving. Do not print credentials.
 - Reserve the unused email for the final recorded full-flow attempt. Inspect registration
   without submitting it; develop reusable login/booking steps using an existing account.
   Start recording before account creation. Do not automatically retry signup after a
   successful creation or an uncertain submission outcome. An existing-account run does
   not satisfy the assignment's new-account checkpoint. A fresh full-flow retry may need
   another unused email; GoGoX email reuse/deletion behavior has not been verified.
-- Full booking test and other page objects have not been implemented.
+- Future pickup date/time, 4-hour rental and explicit Van action/assertion are next.
+  Initial details screen showed Today/ASAP, Hourly rental No and Van highlighted;
+  defaults do not prove required settings. TimeVehiclePage only checks screen markers.
+- Full booking test, other booking page objects and new registration remain pending.
 - Appium server restarted with warning-level logging (exec session 25011). Verify
   readiness before reuse. Typed credentials were absent from checked login reports
   and server log; raw private screen inspections must remain ignored.

@@ -10,8 +10,10 @@ registration:
   method: email
   email: ""
   password: ""
-# User-approved practice choices; actual app search results still need inspection.
+# User-approved practice queries and exact results observed in the installed app.
 booking:
   from_location: "IFC Mall"
   to_location: "Harbour City"
+  from_result: "ifc mall, Finance Street, Central, Hong Kong"
+  to_result: "Harbour City, Canton Road, Tsim Sha Tsui, Hong Kong"
   tunnel_preference: "Cross-Harbour Tunnel (Hung Hom)"

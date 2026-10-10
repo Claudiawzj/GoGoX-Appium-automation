@@ -8,6 +8,9 @@ also passed on the iPhone (1 passed in 3.56 seconds). See GETTING_STARTED.md for
 walkthrough and actual verification records.
 Existing-account email login also passed on the iPhone: **1 passed in 24.24 seconds**.
 It confirms the Personal account menu after login; registration and booking remain pending.
+The route checkpoint passed too: **1 passed in 22.94 seconds**, selecting the exact
+IFC Mall → Harbour City addresses and reaching Time and vehicle. Future pickup time,
+four-hour rental, extras, review/tip and fresh registration remain pending.
 
 ## Selected tools
 
@@ -120,6 +123,26 @@ Use the project's `npm start` command with warning-level Appium logging when ent
 credentials. Verbose HTTP/debug logs can contain typed text. Test step logs omit
 credential values; raw screen inspections and reports stay private until reviewed.
 
+The route checkpoint requires a signed-in account at the English Transport home
+screen. It deliberately replaces both route fields with the configured practice
+locations, selects the exact observed search-result names, verifies the saved
+addresses and taps Next. It ends at Time and vehicle without choosing pickup time,
+rental duration or extras, and never places an order.
+
+```bash
+.venv/bin/python -m pytest tests/test_route.py --device --html=reports/route.html --self-contained-html
+```
+
+Location selection returns automatically to home. The page object waits for the
+saved address; it does not tap Done during that transition. Home field locators
+distinguish the pickup and destination cells, and exact result names are external
+data so shops inside the mall cannot be silently selected instead.
+
+Run checkpoint tests individually in their stated starting screens. They are not
+yet a complete suite with automated state setup; do not run all device tests as
+proof of the full assignment flow. To repeat the route checkpoint after it passes,
+tap Back from Time and vehicle to return to home.
+
 Reserve the unused email for the final recorded full-flow attempt. During development,
 inspect registration without submitting it and exercise login/booking with an existing
 test account. Start recording before creating the new account. Existing-account runs
@@ -133,7 +156,7 @@ email; GoGoX email reuse and deletion behavior have not been verified.
 - pages: inspected Home Page locators and read-only checks; other pages pending.
 - tests: test logic and checkpoint assertions.
 - utils: reusable helpers and configuration loading.
-- config: capabilities and, later, external test data.
+- config: capabilities and external login/route test data.
 - reports: HTML reports, step logs and selected evidence.
 
 The full flow must include registration/login, route, future pickup date/time,
@@ -142,7 +165,8 @@ Record the installed app's contact-entry sequence discrepancy. Stop at review; n
 place or confirm an order. No order-submission action will be implemented.
 
 The user approved IFC Mall → Harbour City and Cross-Harbour Tunnel (Hung Hom) for
-practice. Actual location search results, remaining test data and booking locators
-still need inspection. Registration prerequisites and implementation remain pending.
+practice. The mall results at Finance Street and Canton Road have been inspected.
+Remaining test data and booking locators still need inspection. Registration
+prerequisites and implementation remain pending.
 Rehearse the reusable steps first, then record the complete fresh-registration attempt
 from its start. Review the recording and results before submission packaging.
