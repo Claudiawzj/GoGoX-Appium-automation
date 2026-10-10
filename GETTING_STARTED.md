@@ -5,7 +5,7 @@
 - Device: the same physical iPhone 13 Pro used for Part 1 (user confirmed availability).
 - Language/framework: Python/Pytest, the assistant's preferred option for this assignment.
 - Mobile automation: Appium with Apple's XCUITest driver.
-- Reporting: pytest-html (planned).
+- Reporting: pytest-html.
 - Boundary: finish at review with the $20 tip shown. Never place or confirm an order.
 
 ## What the tools do
@@ -287,3 +287,31 @@ Next: implement new-account registration, connect it with login and the verified
 booking steps, then record the assignment run from before account creation. The
 unused email remains reserved; this practice did not create a new account and does
 not replace the assignment's registration checkpoint. No demo video was recorded.
+
+### Automatic existing-account login — 10 October 2026
+
+User's 22:59 run started signed out. The old booking test assumed prior login and
+never invoked LoginPage, so it entered guest Order details and timed out on Cargo
+compensation. Read-only inspection confirmed the guest Log in or sign up control and
+no Cargo compensation section. This is an automation precondition/integration gap,
+not evidence of a GoGoX product defect.
+
+Updated test_transport_booking.py now opens the menu immediately after restart,
+waits for a verified guest or Personal-account state, logs in once using the existing
+login credentials when guest, verifies Personal account, closes the menu and starts
+route entry. An already signed-in account skips password submission. Unknown account
+state or failed login stops before booking. Login failures suppress nested frames
+that could expose credential arguments. No signup or password retry is performed.
+
+Verified the corrected full test from the actual signed-out state: **1 passed in
+149.15 seconds**. Log records guest detection, email/password login, Personal account
+confirmation, route, future pickup/four-hour Van, Cargo compensation and required
+extras, saved dummy contact, Driver tip $20 and Review fee assertions. Phone ends at
+Review; no order placed. Latest transport-booking.html, console log and final screenshot
+are from this successful corrected run. Prior failure preserved as
+reports/transport-booking-signed-out-failure.html; all reports remain private and ignored.
+
+Same booking command now works after sign out as well as while signed in. Existing
+credentials stay under login; registration remains blank for the new-account recording.
+Earlier helper-authorization problem did not recur during this run. Its original
+trigger is still unestablished; do not attribute it to a disabled UI Automation switch.

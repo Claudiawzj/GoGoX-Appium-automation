@@ -2,7 +2,7 @@
 
 Status: Python/Pytest page objects now cover existing-account login and the
 Transport booking steps through Review with a HK$20 tip. The integrated booking
-test passed on the iPhone: **1 passed in 127.54 seconds** on 10 October 2026. Fresh-account registration and the demo
+test passed on the iPhone: **1 passed in 149.15 seconds from a signed-out account** on 10 October 2026. Fresh-account registration and the demo
 recording remain pending; an existing-account run does not complete the assignment.
 See GETTING_STARTED.md for the earlier checkpoint results and current run record.
 
@@ -190,9 +190,12 @@ from its start. Review the recording and results before submission packaging.
 
 ## Run the booking practice from Transport
 
-Keep the iPhone connected and unlocked with the existing account signed in and Appium
-running. Populate booking.contact in the private data file with dummy details. This
-test restarts GoGoX without resetting account data, enters the approved route, sets
+Keep the iPhone connected and unlocked with Appium running. The test checks the
+account menu, logs in once using config/data.local.yaml login credentials if it finds
+a guest, and verifies the Personal account before booking. It skips password entry
+when already signed in. Populate booking.contact in the private data file with dummy details. This
+test restarts GoGoX without resetting account data, verifies that the account is signed in,
+enters the approved route, sets
 future pickup/four-hour Van, selects all required extras, saves contacts on Review,
 adds HK$20 tip, verifies the fee breakdown, captures evidence and stops.
 
@@ -215,3 +218,12 @@ also asserted. Contact Save and tunnel-sheet Confirm are guarded by their sheet
 content. The footer shares the same identifier on Next, Review and Place order;
 only the first two are implemented, with the corresponding page guard. ReviewPage
 has no footer click or submission method.
+
+### Signed-out start
+
+The booking test now supports both signed-out and signed-in starts. Use the same
+command above. Existing login data stays under login in the ignored private file;
+registration remains separate and blank for the future new-account recording.
+Unknown menu state or failed login stops the test before booking. The password is
+submitted once; no automatic password retries. A signed-out booking attempt before
+this fix reached guest Order details without Cargo compensation and timed out.

@@ -1,6 +1,6 @@
 """Existing-account booking practice, from restart to Review with HK$20 tip.
 
-Registration/login are separate checkpoints; this test does not satisfy fresh signup.
+Logs in with saved existing credentials if signed out; does not create a new account.
 """
 
 import logging
@@ -8,9 +8,12 @@ import pytest
 
 from pages.home_page import HomePage
 from pages.location_page import LocationPage
+from pages.login_page import LoginPage
+from pages.menu_page import MenuPage
 from pages.order_details_page import OrderDetailsPage
 from pages.time_vehicle_page import TimeVehiclePage
-from utils.settings import ROOT, load_route_data, load_time_vehicle_data, load_extras_data
+from utils.settings import (ROOT, load_route_data, load_time_vehicle_data,
+                            load_extras_data, load_login_credentials)
 
 
 @pytest.mark.device
@@ -25,6 +28,24 @@ def test_transport_to_review_with_twenty_dollar_tip(driver, device_settings):
     driver.activate_app(bundle)
     home = HomePage(driver, wait).wait_for_transport_screen()
     assert home.transport_is_selected(), "Transport must be the selected service."
+    account_menu = MenuPage(driver, wait).open()
+    if account_menu.account_state() == "guest":
+        logging.info("STEP: Guest detected; log in with the existing account before booking")
+        email, password = load_login_credentials()
+        account_menu.open_guest_login()
+        try:
+            login = LoginPage(driver, wait).enter_existing_email(email)
+            login.submit_existing_password(password)
+            home.wait_for_transport_screen()
+        except Exception:
+            # Suppress nested login frames that could include private arguments.
+            raise RuntimeError("Existing-account login failed; booking was not started. "
+                               "No automatic password retry was performed.") from None
+        account_menu.open()
+    else:
+        logging.info("STEP: Existing account already signed in; no password submission needed")
+    account_menu.wait_for_signed_in().close()
+    home.wait_for_transport_screen()
     locations = LocationPage(driver, wait)
     home.open_pickup()
     locations.choose_pickup(route["from_location"], route["from_result"])

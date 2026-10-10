@@ -114,3 +114,31 @@ never clicks the footer. Tunnel Confirm is guarded by the preference-sheet expla
 Existing-account practice is verified, not fresh registration. Registration/login-to-
 booking integration and demo recording remain pending. Reserve unused email for recording.
 Earlier status bullets describe past checkpoints; this update is the current handoff.
+
+### Automatic existing-account login — 10 October 2026
+
+User's 22:59 run started signed out. The old booking test assumed prior login and
+never invoked LoginPage, so it entered guest Order details and timed out on Cargo
+compensation. Read-only inspection confirmed the guest Log in or sign up control and
+no Cargo compensation section. This is an automation precondition/integration gap,
+not evidence of a GoGoX product defect.
+
+Updated test_transport_booking.py now opens the menu immediately after restart,
+waits for a verified guest or Personal-account state, logs in once using the existing
+login credentials when guest, verifies Personal account, closes the menu and starts
+route entry. An already signed-in account skips password submission. Unknown account
+state or failed login stops before booking. Login failures suppress nested frames
+that could expose credential arguments. No signup or password retry is performed.
+
+Verified the corrected full test from the actual signed-out state: **1 passed in
+149.15 seconds**. Log records guest detection, email/password login, Personal account
+confirmation, route, future pickup/four-hour Van, Cargo compensation and required
+extras, saved dummy contact, Driver tip $20 and Review fee assertions. Phone ends at
+Review; no order placed. Latest transport-booking.html, console log and final screenshot
+are from this successful corrected run. Prior failure preserved as
+reports/transport-booking-signed-out-failure.html; all reports remain private and ignored.
+
+Same booking command now works after sign out as well as while signed in. Existing
+credentials stay under login; registration remains blank for the new-account recording.
+Earlier helper-authorization problem did not recur during this run. Its original
+trigger is still unestablished; do not attribute it to a disabled UI Automation switch.
