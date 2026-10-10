@@ -2,7 +2,7 @@
 
 Status: Python/Pytest page objects now cover existing-account login and the
 Transport booking steps through Review with a HK$20 tip. The integrated booking
-test passed on the iPhone: **1 passed in 149.15 seconds from a signed-out account** on 10 October 2026. Fresh-account registration and the demo
+test passed on the iPhone: **1 passed in 134.00 seconds while already signed in** on 10 October 2026. Fresh-account registration and the demo
 recording remain pending; an existing-account run does not complete the assignment.
 See GETTING_STARTED.md for the earlier checkpoint results and current run record.
 
@@ -227,3 +227,20 @@ registration remains separate and blank for the future new-account recording.
 Unknown menu state or failed login stops the test before booking. The password is
 submitted once; no automatic password retries. A signed-out booking attempt before
 this fix reached guest Order details without Cargo compensation and timed out.
+
+### Startup and text entry
+
+The booking test is marked restart_app. Its fixture sets appium:autoLaunch to false
+for that test only; the test then terminates/activates GoGoX once. Other checkpoint
+tests retain their original automatic launch. Previously the session launched GoGoX
+and the test restarted it, producing two visible launches.
+
+Login uses element.send_keys, not a clipboard or Paste action. The installed iPhone
+helper implements this as synthesized text input. A visible iOS Paste edit menu does
+not establish that the test pasted anything; its exact display trigger was not recorded.
+
+Van selection now waits for consecutive matching full-card rectangles and taps the
+Van Cell rather than its label, then checks card-check inside that same Van Cell.
+The failed run stopped on this assertion; a later inspection showed 5.5t Truck selected.
+The exact cause of that earlier tap outcome remains unestablished. No fallback to a
+truck is allowed and Next is guarded by the verified Van selection.

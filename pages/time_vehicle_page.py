@@ -41,8 +41,29 @@ class TimeVehiclePage(BasePage):
         self.visible_control(pickers.OK).click()
         self.wait.until(lambda session: not session.find_elements(*pickers.WHEELS))
         self.visible_control(time_vehicle.FOUR_HOURS)
-        logging.info("STEP: Select Van and verify the check mark inside its own card")
-        self.visible_control(time_vehicle.VAN).click()
+        self.select_van()
+        return self
+
+    def select_van(self):
+        logging.info("STEP: Wait for the Van card to settle, tap its whole card and verify selection")
+        previous_rect = None
+
+        def settled_card(session):
+            nonlocal previous_rect
+            cards = [e for e in session.find_elements(*time_vehicle.VAN_CARD)
+                     if e.is_displayed()]
+            if len(cards) != 1:
+                previous_rect = None
+                return False
+            card = cards[0]
+            rect = card.rect
+            settled = rect == previous_rect and rect["height"] > 0
+            previous_rect = rect
+            return card if settled else False
+
+        # Rental-sheet dismissal can reflow the vehicle table. Use the full semantic
+        # card only after consecutive observations agree, rather than its moving label.
+        self.wait.until(settled_card, message="Van card did not settle after rental selection.").click()
         self.visible_control(time_vehicle.VAN_SELECTED)
         return self
 

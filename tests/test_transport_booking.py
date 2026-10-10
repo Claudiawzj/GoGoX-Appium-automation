@@ -17,6 +17,7 @@ from utils.settings import (ROOT, load_route_data, load_time_vehicle_data,
 
 
 @pytest.mark.device
+@pytest.mark.restart_app
 def test_transport_to_review_with_twenty_dollar_tip(driver, device_settings):
     route = load_route_data()
     plan, hours, vehicle = load_time_vehicle_data()

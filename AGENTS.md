@@ -142,3 +142,33 @@ Same booking command now works after sign out as well as while signed in. Existi
 credentials stay under login; registration remains blank for the new-account recording.
 Earlier helper-authorization problem did not recur during this run. Its original
 trigger is still unestablished; do not attribute it to a disabled UI Automation switch.
+
+### Single startup and Van-card selection — 10 October 2026
+
+User's 23:12 run successfully logged in, then timed out waiting for the Van card's
+own card-check marker. Inspection after the failure showed 5.5t Truck selected.
+The exact cause of the old label-tap outcome was not established; do not classify
+this as a GoGoX product defect. Changed Van action to wait for consecutive equal
+whole-card rectangles, tap the Van Cell and retain the scoped check assertion.
+A direct check on the current failed screen selected Van and verified its marker.
+
+The booking fixture previously auto-launched GoGoX before the test restarted it.
+Added restart_app marker: only the booking session disables autoLaunch; the test
+owns one terminate/activate startup. Other checkpoints keep their original launch.
+
+Login code does not paste or use clipboard commands. It uses element.send_keys.
+Inspection of the installed helper's value handler and typing category confirms
+synthesized text-input events. A visible iOS Paste edit menu does not establish a
+Paste action; its exact appearance trigger was not captured. No typing changes made.
+
+Full corrected test passed while already signed in: **1 passed in 134.00 seconds**.
+Log confirms session connected without auto-launch, one test-owned startup,
+signed-in branch skipped password submission, stable Van card selected/asserted,
+all required extras/contact and Driver tip $20 verified, then stop at Review.
+No order placed. Earlier signed-out branch verified in the preceding 149.15-second
+run; latest failed user run also confirms successful login before its Van timeout.
+
+Latest reports/transport-booking.html, console log and final screenshot are from this
+134-second success. Previous user failure saved to reports/transport-booking-van-failure.html;
+van-failure and van-card-corrected XML/screenshots remain private under reports/inspection.
+All evidence excluded from Git. Same manual test command remains valid.

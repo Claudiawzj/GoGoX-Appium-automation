@@ -21,9 +21,15 @@ def device_settings(request):
 
 
 @pytest.fixture
-def driver(device_settings):
-    logging.info("STEP: Connect to the iPhone and launch the configured GoGoX app")
-    options = XCUITestOptions().load_capabilities(device_settings["capabilities"])
+def driver(device_settings, request):
+    capabilities = dict(device_settings["capabilities"])
+    if request.node.get_closest_marker("restart_app"):
+        # This test owns the app restart. Avoid launching here and again in the test.
+        capabilities["appium:autoLaunch"] = False
+        logging.info("STEP: Connect to the iPhone; the booking test will launch GoGoX once")
+    else:
+        logging.info("STEP: Connect to the iPhone and launch the configured GoGoX app")
+    options = XCUITestOptions().load_capabilities(capabilities)
     session = webdriver.Remote(device_settings["server_url"], options=options)
     session.implicitly_wait(0)
     try:

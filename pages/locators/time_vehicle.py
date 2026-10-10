@@ -5,6 +5,8 @@ from appium.webdriver.common.appiumby import AppiumBy
 TITLE = (AppiumBy.ACCESSIBILITY_ID, "Time and vehicle")
 HOURLY_RENTAL = (AppiumBy.ACCESSIBILITY_ID, "Hourly rental")
 VAN = (AppiumBy.ACCESSIBILITY_ID, "Van")
+VAN_CARD = (AppiumBy.XPATH,
+            '//XCUIElementTypeCell[XCUIElementTypeStaticText[@name="Van"]]')
 BACK = (AppiumBy.ACCESSIBILITY_ID, "back")
 CALENDAR = (AppiumBy.ACCESSIBILITY_ID, "calendar")
 PICKUP_SUMMARY = (AppiumBy.XPATH,
