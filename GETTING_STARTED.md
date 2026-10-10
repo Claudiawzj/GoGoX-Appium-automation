@@ -71,6 +71,34 @@ performed the phone settings, account/certificate checks and developer trust man
 For further beginner instructions, distinguish assistant-operated Mac steps from
 user-operated phone steps and explain the purpose before proceeding.
 
+## Home Page inspection and first page object — 10 October 2026
+
+The first read-only capture caught the loading screen. Added an explicit wait for
+visible interactive controls before taking a usable screen capture. The second
+capture showed the English Transport home screen with empty route fields.
+
+Observed locators in GoGoX 7.111.0:
+
+| Control | Accessibility name |
+| --- | --- |
+| Menu | home__header__navigation_icon__menu |
+| Transport service | Transport |
+| Empty From field | Where from? |
+| Empty To field | Where to? |
+| Proceed control | Next |
+
+Created pages/locators/home.py, a shared explicit-wait helper and HomePage read-only
+checks. Verified through Appium on the real phone: **1 passed in 3.56 seconds**.
+The check confirmed the controls' visibility/uniqueness, selected Transport and the
+empty route labels. It performed no taps. Populated route controls and subsequent
+screens still need inspection; do not infer their locators from these placeholders.
+
+The user selected email registration and confirmed an unregistered email is
+available. Private config/data.local.yaml prepared from the empty example template;
+the user needs to enter the email and chosen test-account password locally before
+the registration implementation can run. Neither has been requested in chat. Git
+ignore was verified for that local file. No new account has been created yet.
+
 ## First task: connect the phone
 
 1. Connect the iPhone to this Mac with a USB data cable.

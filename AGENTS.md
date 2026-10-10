@@ -39,8 +39,11 @@ assumptions/challenges/improvements, and a recording of a verified complete run.
 - Xcode 16.4 built and ran WebDriverAgent after Personal Team developer trust.
 - Connection test passed: 1 passed in 22.96 seconds. It only launches GoGoX and
   verifies foreground state. It performs no booking actions.
-- Full booking test and page objects have not been implemented.
-- Registration inputs, final route and runtime test data still need resolution.
+- Read-only Home Page object and separately stored locators implemented and verified:
+  one home-control test passed in 3.56 seconds, without taps or data entry.
+- Email chosen for new-account registration; user can use an unregistered email.
+  Registration code, private email/password, final route and runtime test data remain pending.
+- Full booking test and other page objects have not been implemented.
 - Full-flow recording and submission are pending. GitHub is the preferred delivery.
 
 Local device/account configuration, tool installations and raw reports are excluded

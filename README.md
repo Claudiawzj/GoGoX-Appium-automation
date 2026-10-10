@@ -3,7 +3,8 @@
 Status: initial environment setup and a connection test verified on the iPhone.
 After the user trusted the Personal Team certificate, the connection test passed
 (1 passed in 22.96 seconds on 10 October 2026). The booking framework, full assignment
-run and demo recording are not complete. See GETTING_STARTED.md for the beginner
+run and demo recording are not complete. Home Page locators and read-only checks
+also passed on the iPhone (1 passed in 3.56 seconds). See GETTING_STARTED.md for the beginner
 walkthrough and actual verification records.
 
 ## Selected tools
@@ -77,9 +78,35 @@ does not tap controls or start a booking. An unconfigured device run fails with 
 missing configuration fields. Running without --device skips the device test; a skip
 is not proof that automation works.
 
+## Inspect and verify the initial screen
+
+Capture an actual screenshot and UI hierarchy without tapping controls:
+
+```sh
+.venv/bin/python -m utils.inspect_screen
+```
+
+The helper waits explicitly for visible controls, then saves private evidence under
+reports/inspection. It does not assume that the app's foreground state means it has
+finished loading. Raw evidence can contain personal information and stays out of Git.
+
+Check the inspected Home Page locators on the actual phone:
+
+```sh
+.venv/bin/python -m pytest --device tests/test_home_controls.py --html=reports/home-controls.html --self-contained-html
+```
+
+This check expects the English Transport screen with empty From/To fields. It makes
+no taps. Do not silently clear an existing draft route to make it pass.
+
+For the upcoming email-registration step, copy config/data.example.yaml to
+config/data.local.yaml and fill the email/password on your own Mac. The local file
+is ignored by Git. Registration automation is not implemented yet; do not interpret
+these placeholders as a completed authentication flow.
+
 ## Planned structure and safeguards
 
-- pages: inspected locators and actions per screen (not implemented yet).
+- pages: inspected Home Page locators and read-only checks; other pages pending.
 - tests: test logic and checkpoint assertions.
 - utils: reusable helpers and configuration loading.
 - config: capabilities and, later, external test data.

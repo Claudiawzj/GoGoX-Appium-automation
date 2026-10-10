@@ -1,0 +1,6 @@
+# Copy to data.local.yaml and fill it locally; never upload the local file.
+# This data is for the upcoming registration implementation, which is not yet written.
+registration:
+  method: email
+  email: ""
+  password: ""
