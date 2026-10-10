@@ -37,10 +37,14 @@ class ReviewPage(BasePage):
         for index, key in enumerate(("name", "phone", "extension")):
             # Reacquire fields after each edit: the sheet relayouts as focus changes.
             value = contact[key]
-            if self._contact_fields()[index].get_attribute("value") != value:
-                field = self._contact_fields()[index]
-                field.click()
-                field.clear()
+            field = self._contact_fields()[index]
+            existing = field.get_attribute("value") or ""
+            if existing != value:
+                # Let Appium focus during text entry, as on the login screen.
+                # Clearing an empty field adds an unnecessary focus action too.
+                if existing:
+                    field.clear()
+                    field = self._contact_fields()[index]
                 if value:
                     try:
                         field.send_keys(value)

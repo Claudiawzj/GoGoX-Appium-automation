@@ -246,3 +246,9 @@ Van Cell rather than its label, then checks card-check inside that same Van Cell
 The failed run stopped on this assertion; a later inspection showed 5.5t Truck selected.
 The exact cause of that earlier tap outcome remains unestablished. No fallback to a
 truck is allowed and Next is guarded by the verified Van selection.
+
+Contact entry also leaves focus to Appium: no separate field tap, and an empty field
+is not cleared. Existing content is replaced only when necessary; an empty optional
+extension is left alone. All contact values and the saved summary remain asserted.
+The full booking test with this change passed in **125.67 seconds**, ending at Review
+with HK$20 tip. No order was submitted.

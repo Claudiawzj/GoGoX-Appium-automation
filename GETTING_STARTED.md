@@ -376,3 +376,20 @@ focus-typing-without-explicit-tap.png/.xml, initial/first-tap/post-typing captur
 focus-comparison.json. Login report reports/login-single-focus.html and console log
 remain ignored. All credential checks passed before committing. Current task's
 next step remains fresh-registration implementation and full assignment recording.
+
+### Contact-entry focus fix — 10 October 2026
+
+Removed the explicit contact-field tap before clear/send_keys. Existing content is
+cleared only when it differs from the requested value and is nonempty; fields are
+reacquired after clearing. Empty optional extension is left untouched. Appium now
+owns input focus, matching the login fix. Per-field, combined-value and saved-contact
+summary assertions remain. The old contact path had an extra focus action, but its
+exact popup trigger was not recorded. No clipboard/Paste action is used.
+
+Connected-iPhone booking test passed: **1 passed in 125.67 seconds**. Already signed
+in; route, future pickup, four-hour Van, required extras, saved dummy contact and
+HK$20 tip all verified. Stopped at Review; no order placed. This verifies retained
+values and successful completion, not absence of every transient edit menu.
+Latest private report: reports/transport-booking.html; console log and final screenshot
+are from this run. No recording or registration performed. Phone remains at Review.
+Fresh-registration implementation and full assignment recording remain pending.
