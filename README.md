@@ -6,6 +6,8 @@ After the user trusted the Personal Team certificate, the connection test passed
 run and demo recording are not complete. Home Page locators and read-only checks
 also passed on the iPhone (1 passed in 3.56 seconds). See GETTING_STARTED.md for the beginner
 walkthrough and actual verification records.
+Existing-account email login also passed on the iPhone: **1 passed in 24.24 seconds**.
+It confirms the Personal account menu after login; registration and booking remain pending.
 
 ## Selected tools
 
@@ -99,10 +101,32 @@ Check the inspected Home Page locators on the actual phone:
 This check expects the English Transport screen with empty From/To fields. It makes
 no taps. Do not silently clear an existing draft route to make it pass.
 
-For the upcoming email-registration step, copy config/data.example.yaml to
-config/data.local.yaml and fill the email/password on your own Mac. The local file
-is ignored by Git. Registration automation is not implemented yet; do not interpret
-these placeholders as a completed authentication flow.
+Copy config/data.example.yaml to config/data.local.yaml. Put the registered account's
+email/password in the `login` section on your own Mac. Leave `registration` blank
+until preparing the final recorded attempt. The local file is ignored by Git.
+Registration automation is not implemented yet.
+
+The existing-account login checkpoint requires the English Transport home screen,
+empty From/To fields and a signed-out account. It submits login once and verifies
+the Transport screen and menu's authenticated state. It fails if already signed in;
+sign out in the app before deliberately repeating this checkpoint. No account
+creation, password-reset action or booking action is included.
+
+```bash
+.venv/bin/python -m pytest tests/test_login.py --device --html=reports/login.html --self-contained-html
+```
+
+Use the project's `npm start` command with warning-level Appium logging when entering
+credentials. Verbose HTTP/debug logs can contain typed text. Test step logs omit
+credential values; raw screen inspections and reports stay private until reviewed.
+
+Reserve the unused email for the final recorded full-flow attempt. During development,
+inspect registration without submitting it and exercise login/booking with an existing
+test account. Start recording before creating the new account. Existing-account runs
+verify reusable steps but do not satisfy the required new-account registration step.
+Do not automatically retry signup after successful creation or an uncertain submission
+outcome. A repeat of the complete fresh-registration flow may require another unused
+email; GoGoX email reuse and deletion behavior have not been verified.
 
 ## Planned structure and safeguards
 
@@ -117,5 +141,8 @@ The full flow must include registration/login, route, future pickup date/time,
 Record the installed app's contact-entry sequence discrepancy. Stop at review; never
 place or confirm an order. No order-submission action will be implemented.
 
-Route, registration prerequisites, exact test data and app locators remain unresolved.
-Screen recording and submission packaging follow a verified complete automation run.
+The user approved IFC Mall → Harbour City and Cross-Harbour Tunnel (Hung Hom) for
+practice. Actual location search results, remaining test data and booking locators
+still need inspection. Registration prerequisites and implementation remain pending.
+Rehearse the reusable steps first, then record the complete fresh-registration attempt
+from its start. Review the recording and results before submission packaging.

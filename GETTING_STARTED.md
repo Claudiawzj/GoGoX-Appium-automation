@@ -95,9 +95,51 @@ screens still need inspection; do not infer their locators from these placeholde
 
 The user selected email registration and confirmed an unregistered email is
 available. Private config/data.local.yaml prepared from the empty example template;
-the user needs to enter the email and chosen test-account password locally before
-the registration implementation can run. Neither has been requested in chat. Git
+reserve this email for the final recorded full-flow attempt. Credentials can be entered
+locally when needed; do not use this email for development signup attempts. Neither
+email nor password has been requested in chat. Git
 ignore was verified for that local file. No new account has been created yet.
+
+Registration changes the account stored by GoGoX, so treat a fresh email as a one-time
+input. We have not verified whether GoGoX allows reusing it after deleting an account.
+We will inspect registration screens without submitting, then develop and rehearse
+login and booking using an existing account. These rehearsals do not count as the full
+assignment run. When the reusable steps are ready, start recording before registration
+and run through to review with the $20 tip. If the attempt fails after account creation,
+keep the evidence and expect to need another unused email for a new complete attempt.
+
+## Existing-account login checkpoint — 10 October 2026
+
+The user filled the private local file with a registered email and password. The
+assistant moved these values from `registration` into a separate `login` section
+without displaying them, and left fresh-registration fields blank. Use `login`
+for the existing account; keep an unused email for the final recorded attempt.
+
+Inspected guest menu, email and password screens through Appium. Inputs are custom
+accessible controls of type Other; typing directly into the focused control works.
+No fixed sleeps are used. Added separate locator files and LoginPage/MenuPage objects.
+
+The first device test submitted login successfully but failed its menu check: GoGoX
+retains the old sign-in identifier as a disabled control after login. Corrected the
+check to require the Personal account avatar/button, absence of Hi guest and no enabled
+sign-in control. The Personal button uses a type-specific locator because its label
+also appears as static text. Signed out through Settings → Personal → Log out of your
+personal account, then reran the complete login checkpoint: **1 passed in 24.24 seconds**.
+The phone is now signed in, with its menu open. No new account or booking was created.
+
+Evidence stays local in reports/login-verified.html and reports/login-verified-console.log.
+The earlier failure is retained in reports/login.html and reports/login-console.log.
+Appium was restarted with warning-level logging before credentials were entered.
+Checked the server log and login reports for the exact credential values; none were
+present. Private account screen XML remains ignored and is not submission evidence.
+
+The login test expects a signed-out account at the Transport home screen with empty
+From/To fields. It does not automatically sign out or retry passwords. To deliberately
+repeat it, sign out in the app and return to home first.
+
+User approved IFC Mall → Harbour City and Cross-Harbour Tunnel (Hung Hom) for practice.
+These choices are saved in the external data file; matching actual app search results
+and implementing route/booking pages are the next steps.
 
 ## First task: connect the phone
 
@@ -116,7 +158,8 @@ After a compatible Xcode can pair with the device, enable **Settings → Privacy
 4. Run a small connection test that opens GoGoX without booking anything.
 5. Inspect real controls and implement one screen at a time.
 6. Assemble the registration/login and Transport flow, asserting the required selections and stopping at review with the $20 tip.
-7. Verify the full run, generate an HTML report, and record the demo.
+7. Rehearse reusable steps with an existing account. Start recording before the fresh
+   registration attempt, then verify the full run and generate an HTML report.
 8. Complete the README, assumptions/challenges/improvements note, and ZIP or repository delivery.
 
 The framework will use `pages`, `tests`, `utils`, `config`, and `reports`. No booking test has been implemented yet.
@@ -125,8 +168,9 @@ The framework will use `pages`, `tests`, `utils`, `config`, and `reports`. No bo
 
 - Current device OS, GoGoX version and Hong Kong market.
 - New-account registration data and access to verification, if needed; distinguish any human verification step from automated steps.
-- Final From/To locations. IFC Mall → Harbour City is only a proposal, not the retained manual route.
-- Exact Tunnel Preference choice. The manual screenshots support Cross-Harbour Tunnel (Hung Hom).
+- Actual search results for the user-approved practice route IFC Mall → Harbour City.
+  This was not retained as the final route from the exploratory manual attempts.
+- Implement the approved Cross-Harbour Tunnel (Hung Hom) choice; availability still needs inspection.
 - Dummy contact details and a pickup date/time that remains future at execution.
 - Contact entry appears after Review Order in the manually tested version; record and implement the installed app's actual sequence without silently omitting contact entry.
 

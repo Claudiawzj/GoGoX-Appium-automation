@@ -21,3 +21,21 @@ def load_device_settings():
     if missing:
         raise ValueError("Fill these configuration fields: " + ", ".join(missing))
     return settings
+
+
+def load_login_credentials():
+    """Read only existing-account data; errors never include credential values."""
+    path = ROOT / "config" / "data.local.yaml"
+    if not path.is_file():
+        raise ValueError("Create config/data.local.yaml and fill the login section first.")
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except yaml.YAMLError:
+        raise ValueError("Local test data is not valid YAML; check the file locally.") from None
+    login = data.get("login") if isinstance(data, dict) else None
+    if not isinstance(login, dict) or login.get("method") != "email":
+        raise ValueError("Local test data needs a login section with method: email.")
+    if any(not isinstance(login.get(key), str) or not login[key].strip()
+           for key in ("email", "password")):
+        raise ValueError("Fill both email and password in the local login section.")
+    return login["email"], login["password"]

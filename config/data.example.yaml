@@ -1,6 +1,17 @@
 # Copy to data.local.yaml and fill it locally; never upload the local file.
-# This data is for the upcoming registration implementation, which is not yet written.
+# Existing account used for repeatable development login/booking runs.
+login:
+  method: email
+  email: ""
+  password: ""
+# Reserve an unused email for the final recorded full-flow attempt.
+# Registration automation is not implemented yet. Never use login data for signup.
 registration:
   method: email
   email: ""
   password: ""
+# User-approved practice choices; actual app search results still need inspection.
+booking:
+  from_location: "IFC Mall"
+  to_location: "Harbour City"
+  tunnel_preference: "Cross-Harbour Tunnel (Hung Hom)"

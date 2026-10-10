@@ -42,8 +42,26 @@ assumptions/challenges/improvements, and a recording of a verified complete run.
 - Read-only Home Page object and separately stored locators implemented and verified:
   one home-control test passed in 3.56 seconds, without taps or data entry.
 - Email chosen for new-account registration; user can use an unregistered email.
-  Registration code, private email/password, final route and runtime test data remain pending.
+  Fresh registration code/data remain pending. Existing credentials are provided locally
+  under login, not registration; both registration credential fields remain empty.
+- Existing-account LoginPage/MenuPage and separate locators implemented. Complete
+  signed-out-to-signed-in checkpoint passed: 1 passed in 24.24 seconds. First attempt
+  logged in but failed an incorrect menu assertion; GoGoX retains a disabled sign-in
+  control. Corrected and verified on a deliberate retry after sign out.
+- Phone currently signed in with menu open. Never automatically retry passwords.
+  Login test requires signed-out Transport home with empty route fields.
+- User approved IFC Mall → Harbour City and Cross-Harbour Tunnel (Hung Hom) for practice;
+  actual search results and booking controls remain uninspected.
+- Reserve the unused email for the final recorded full-flow attempt. Inspect registration
+  without submitting it; develop reusable login/booking steps using an existing account.
+  Start recording before account creation. Do not automatically retry signup after a
+  successful creation or an uncertain submission outcome. An existing-account run does
+  not satisfy the assignment's new-account checkpoint. A fresh full-flow retry may need
+  another unused email; GoGoX email reuse/deletion behavior has not been verified.
 - Full booking test and other page objects have not been implemented.
+- Appium server restarted with warning-level logging (exec session 25011). Verify
+  readiness before reuse. Typed credentials were absent from checked login reports
+  and server log; raw private screen inspections must remain ignored.
 - Full-flow recording and submission are pending. GitHub is the preferred delivery.
 
 Local device/account configuration, tool installations and raw reports are excluded

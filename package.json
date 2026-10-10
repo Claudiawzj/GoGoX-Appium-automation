@@ -4,7 +4,7 @@
   "private": true,
   "description": "GoGoX assignment: stop at review after adding a HK$20 tip",
   "scripts": {
-    "start": "APPIUM_HOME=\"$PWD/.appium\" appium --address 127.0.0.1 --port 4723 --log-level info --log-no-colors --log reports/appium.log",
+    "start": "APPIUM_HOME=\"$PWD/.appium\" appium --address 127.0.0.1 --port 4723 --log-level warn --log-no-colors --log reports/appium.log",
     "driver:install": "APPIUM_HOME=\"$PWD/.appium\" appium driver install xcuitest@12.16.0",
     "doctor": "APPIUM_HOME=\"$PWD/.appium\" appium driver doctor xcuitest",
     "drivers": "APPIUM_HOME=\"$PWD/.appium\" appium driver list --installed"
