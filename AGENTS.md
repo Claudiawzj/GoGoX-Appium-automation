@@ -95,3 +95,22 @@ and explicit send instruction.
 
 The user is learning automation. Explain each step simply and distinguish actions
 performed by the assistant on the Mac from actions the user performs on the phone.
+
+### Transport-to-Review update — 10 October 2026
+
+Integrated test tests/test_transport_booking.py passed on the physical iPhone:
+1 passed in 127.54 seconds. Restart preserved the existing account, rebuilt the
+approved route, future pickup/four-hour Van and all required extras, saved dummy
+contacts, added $20 tip and asserted Review fee breakdown. Phone stopped at Review;
+no order placed. Evidence stays ignored under reports/transport-booking*.
+
+LocationPage supports automatic return or settled editor followed by Done; never
+confirm before the full selected address is resolved. OrderDetailsPage uses semantic
+rows and observed right-edge taps for inaccessible custom controls. Counts checked
+immediately, all required fees verified on Review. Contact fields have no IDs;
+reacquire by vertical order and verify values before Save plus saved summary. ReviewPage
+never clicks the footer. Tunnel Confirm is guarded by the preference-sheet explanation.
+
+Existing-account practice is verified, not fresh registration. Registration/login-to-
+booking integration and demo recording remain pending. Reserve unused email for recording.
+Earlier status bullets describe past checkpoints; this update is the current handoff.

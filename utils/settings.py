@@ -71,3 +71,18 @@ def load_time_vehicle_data():
     pickup = booking["pickup"]
     plan = build_pickup_plan(pickup.get("days_ahead"), pickup.get("time_24h"))
     return plan, booking["rental_hours"], booking["vehicle"]
+
+
+def load_extras_data():
+    booking = _load_private_test_data().get("booking", {})
+    tunnel = booking.get("tunnel_preference")
+    contact = booking.get("contact")
+    if tunnel != "Cross-Harbour Tunnel (Hung Hom)":
+        raise ValueError("Configure the approved tunnel preference.")
+    if not isinstance(contact, dict) or any(not isinstance(contact.get(key), str)
+                                         for key in ("name", "phone", "extension")):
+        raise ValueError("Configure dummy contact name, phone and extension strings.")
+    if not contact["name"].strip() or not (len(contact["phone"]) == 8
+                                         and contact["phone"].isdigit()):
+        raise ValueError("Dummy contact needs a name and eight-digit phone number.")
+    return tunnel, contact

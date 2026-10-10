@@ -9,9 +9,8 @@ from pages.locators import home, location
 class LocationPage(BasePage):
     def _choose(self, query, result, home_field, description):
         logging.info("STEP: Search for the configured %s and select its exact result", description)
-        # Done marks this editor, but is not a confirmation action after selection.
-        # Selecting a result returns automatically; an early Done tap interrupted
-        # destination persistence during inspection.
+        # The editor may return automatically or keep the resolved address for Done.
+        # Wait for the selected address before confirming a remaining editor.
         self.visible_control(location.DONE)
         field = self.visible_control(location.SEARCH)
         field.clear()
@@ -20,6 +19,22 @@ class LocationPage(BasePage):
                         .get_attribute("value") == query,
                         message="Location query did not match the configured text.")
         self.visible_control(location.exact_result(result)).click()
+
+        def selection_settled(session):
+            if any(item.is_displayed() for item in session.find_elements(*home.MENU)):
+                return "home"
+            fields = [item for item in session.find_elements(*location.SEARCH)
+                      if item.is_displayed()]
+            results = [item for item in session.find_elements(*location.exact_result(result))
+                       if item.is_displayed()]
+            if len(fields) == 1 and fields[0].get_attribute("value") == result and not results:
+                return "editor"
+            return False
+
+        state = self.wait.until(selection_settled,
+                                message="Selected address did not finish resolving.")
+        if state == "editor":
+            self.visible_control(location.DONE).click()
         self.visible_control(home.MENU)
 
         def saved_address(session):

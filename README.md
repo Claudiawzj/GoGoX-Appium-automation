@@ -1,18 +1,10 @@
 # GoGoX Appium assignment
 
-Status: initial environment setup and a connection test verified on the iPhone.
-After the user trusted the Personal Team certificate, the connection test passed
-(1 passed in 22.96 seconds on 10 October 2026). The booking framework, full assignment
-run and demo recording are not complete. Home Page locators and read-only checks
-also passed on the iPhone (1 passed in 3.56 seconds). See GETTING_STARTED.md for the beginner
-walkthrough and actual verification records.
-Existing-account email login also passed on the iPhone: **1 passed in 24.24 seconds**.
-It confirms the Personal account menu after login; registration and booking remain pending.
-The route checkpoint passed too: **1 passed in 22.94 seconds**, selecting the exact
-IFC Mall → Harbour City addresses and reaching Time and vehicle. The time/vehicle
-checkpoint passed: **1 passed in 20.84 seconds**, future pickup, four-hour rental
-and Van verified before Next to Order details. Extras, review/tip and fresh registration
-remain pending. Ten calendar/configuration tests also passed.
+Status: Python/Pytest page objects now cover existing-account login and the
+Transport booking steps through Review with a HK$20 tip. The integrated booking
+test passed on the iPhone: **1 passed in 127.54 seconds** on 10 October 2026. Fresh-account registration and the demo
+recording remain pending; an existing-account run does not complete the assignment.
+See GETTING_STARTED.md for the earlier checkpoint results and current run record.
 
 ## Selected tools
 
@@ -135,8 +127,9 @@ rental duration or extras, and never places an order.
 .venv/bin/python -m pytest tests/test_route.py --device --html=reports/route.html --self-contained-html
 ```
 
-Location selection returns automatically to home. The page object waits for the
-saved address; it does not tap Done during that transition. Home field locators
+Location selection may return automatically or retain the resolved address in the
+editor. The page object waits for the full selected address, taps Done only if the
+editor remains after results disappear, then verifies the saved home field. Home field locators
 distinguish the pickup and destination cells, and exact result names are external
 data so shops inside the mall cannot be silently selected instead.
 
@@ -175,9 +168,9 @@ Do not automatically retry signup after successful creation or an uncertain subm
 outcome. A repeat of the complete fresh-registration flow may require another unused
 email; GoGoX email reuse and deletion behavior have not been verified.
 
-## Planned structure and safeguards
+## Structure and safeguards
 
-- pages: inspected Home Page locators and read-only checks; other pages pending.
+- pages: Home, menu/login, location, pickup/time/vehicle, order details and review actions; separate locator modules.
 - tests: test logic and checkpoint assertions.
 - utils: reusable helpers and configuration loading.
 - config: capabilities and external login/route test data.
@@ -194,3 +187,31 @@ Remaining test data and booking locators still need inspection. Registration
 prerequisites and implementation remain pending.
 Rehearse the reusable steps first, then record the complete fresh-registration attempt
 from its start. Review the recording and results before submission packaging.
+
+## Run the booking practice from Transport
+
+Keep the iPhone connected and unlocked with the existing account signed in and Appium
+running. Populate booking.contact in the private data file with dummy details. This
+test restarts GoGoX without resetting account data, enters the approved route, sets
+future pickup/four-hour Van, selects all required extras, saves contacts on Review,
+adds HK$20 tip, verifies the fee breakdown, captures evidence and stops.
+
+```sh
+.venv/bin/python -m pytest tests/test_transport_booking.py --device --html=reports/transport-booking.html --self-contained-html
+```
+
+The custom plus and checkbox controls expose no accessible identifiers or selected
+state. Their taps are anchored to the inspected semantic row at its right edge.
+Passenger/cart counts are checked immediately; required extras and prices are
+verified in the Review fee breakdown, including Driver tip $20 and Basic $10.
+The unchecked toggles require a fresh draft; restart provides that observed initial
+state and passenger/cart guards reject an already edited draft. Do not resume this
+method halfway through selected extras. Raw screenshots/reports remain local.
+
+In this app version, Order contact info is edited after Review Order. Its three
+unnamed fields are identified by vertical order (name, phone, optional extension),
+reacquired after each edit and verified before Save. The saved contact summary is
+also asserted. Contact Save and tunnel-sheet Confirm are guarded by their sheet
+content. The footer shares the same identifier on Next, Review and Place order;
+only the first two are implemented, with the corresponding page guard. ReviewPage
+has no footer click or submission method.

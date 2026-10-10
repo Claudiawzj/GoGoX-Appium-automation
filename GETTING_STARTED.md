@@ -244,3 +244,46 @@ The framework will use `pages`, `tests`, `utils`, `config`, and `reports`. No bo
 - [XCUITest device preparation](https://appium.github.io/appium-xcuitest-driver/latest/getting-started/device-setup/)
 - [Apple Xcode system requirements](https://developer.apple.com/xcode/system-requirements)
 - [Apple Developer Mode instructions](https://developer.apple.com/documentation/xcode/enabling-developer-mode-on-a-device)
+
+## Transport-to-Review booking practice — 10 October 2026
+
+The assistant restarted GoGoX on the connected iPhone and ran the approved booking
+steps using the already registered account. The combined test passed: **1 passed
+in 127.54 seconds**. It entered IFC Mall → Harbour City, selected 12 October 2026
+at 14:00 HKT, four-hour rental and Van, then Basic $10, three passengers, Premium
+Van, one cart, goods longer than 6 ft, pet-friendly and English-speaking drivers,
+Cross-Harbour Tunnel (Hung Hom), and Move door-to-door. Dummy contact details were
+saved on Review; Driver tip $20 and the required fee rows were asserted. It stopped
+on Review without tapping Place order.
+
+The route editor sometimes keeps the resolved address until Done. The earlier
+restart attempt timed out waiting for automatic return. LocationPage now handles
+both observed paths, waiting until the full address is resolved and search results
+have disappeared before tapping Done when needed, then checking the saved home field.
+
+An exploratory contact-save attempt left the phone field empty and displayed the
+app's valid eight-digit Hong Kong number message. No defect is established by that
+attempt. The implemented contact action reacquires unnamed fields after each edit,
+checks all three values before Save, and verifies the saved contact summary. The
+successful test used the dummy name Automation Test, phone 90000000 and blank optional
+extension. These are draft inputs, not a verified reachable contact.
+
+The custom checkboxes have no accessible selected-state values. Taps use each
+observed semantic row's right-edge control; the review breakdown then verifies
+that required services were retained. Cart +1 is checked on Order details and
+appears as Borrow a trolley on Review. Move door-to-door adds Quote; actual pricing
+is not replaced with an invented fixed total. Screenshots were also visually inspected.
+
+Local evidence: reports/transport-booking.html, reports/transport-booking-console.log
+and reports/transport-booking-final.png. Raw inspection images/XML stay in the ignored
+reports/inspection directory; one exploratory capture includes a personal notification
+banner and must not be shared. The final test screenshot has been checked separately.
+
+To repeat, keep Appium running and the phone connected, unlocked and signed in.
+Run the booking-practice command in README. It restarts the app and rebuilds the draft.
+Do not run all checkpoint tests together: their individual starting screens differ.
+
+Next: implement new-account registration, connect it with login and the verified
+booking steps, then record the assignment run from before account creation. The
+unused email remains reserved; this practice did not create a new account and does
+not replace the assignment's registration checkpoint. No demo video was recorded.

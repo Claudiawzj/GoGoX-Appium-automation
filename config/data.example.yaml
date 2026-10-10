@@ -23,3 +23,8 @@ booking:
     time_24h: "14:00"
   rental_hours: 4
   vehicle: "Van"
+  # Dummy draft contact only; this project never places the order.
+  contact:
+    name: "Automation Test"
+    phone: "90000000"
+    extension: ""
