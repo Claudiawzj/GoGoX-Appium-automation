@@ -11,6 +11,16 @@ from utils.settings import load_device_settings
 
 def pytest_addoption(parser):
     parser.addoption("--device", action="store_true", help="Run tests on the connected iPhone")
+    parser.addoption("--register", action="store_true",
+                     help="Create the configured new account in the full booking test")
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--register"):
+        expected = "tests/test_transport_booking.py::test_transport_to_review_with_twenty_dollar_tip"
+        if not config.getoption("--device") or len(items) != 1 or items[0].nodeid != expected:
+            raise pytest.UsageError("--register requires --device and only "
+                                    "tests/test_transport_booking.py. No test was run.")
 
 
 @pytest.fixture

@@ -12,7 +12,7 @@
 
 Python contains the instructions for the test. Pytest runs those instructions and records whether checks pass. Appium receives instructions from Python and sends them to the phone through XCUITest. On a real iPhone, this uses a development-signed helper called WebDriverAgent. Xcode is Apple's software for building and signing that helper.
 
-A locator identifies a particular field or button. We will obtain locators from the actual installed app, rather than guess them from screenshots. A page object groups the actions for a screen. An explicit wait waits until a specific condition is true, such as a button becoming available. An assertion checks an expected result.
+A locator identifies a particular field or button. Most locators were captured from the installed app. Registration is the current exception: it uses the supplied screenshot and existing control patterns because the user requested no further phone run before recording; those new locators await device verification. A page object groups the actions for a screen. An explicit wait waits until a specific condition is true, such as a button becoming available. An assertion checks an expected result.
 
 ## Setup checks — 10 October 2026
 
@@ -393,3 +393,33 @@ values and successful completion, not absence of every transient edit menu.
 Latest private report: reports/transport-booking.html; console log and final screenshot
 are from this run. No recording or registration performed. Phone remains at Review.
 Fresh-registration implementation and full assignment recording remain pending.
+
+## Your new-account recording — 11 October 2026
+
+The registration code is ready for your first phone check. The assistant did not run
+it on the iPhone or create the account. Six offline configuration checks passed;
+registration controls still need verification in your run.
+
+1. Return from the signup form to the English Transport home while still signed out.
+2. Keep your iPhone connected by USB and unlocked. Keep Appium running in its terminal;
+   use npm start only if no server is running. An address-in-use message means a server
+   may already be there; do not start duplicate servers.
+3. Start your screen recording before executing the test.
+4. In the test terminal run:
+
+```sh
+cd /Users/claudia_wzj/Documents/GOGOX/automation
+.venv/bin/python -m pytest tests/test_transport_booking.py --device --register --html=reports/full-flow.html --self-contained-html
+```
+
+The addition is --register. This uses only the registration email/password for signup
+and the separate login that follows it. Your existing login credentials are unchanged.
+The test leaves optional name blank, submits signup once, verifies the account, signs
+out and logs in again, then runs the booking through Review with a $20 tip. It never
+places the order. Stop recording after the result appears and keep the video locally.
+Report: reports/full-flow.html. It is not an execution result until you run the test.
+
+If the new account was created before a later failure, that email is now registered.
+Check the account state before retrying: another complete fresh-registration recording
+may need another unused email. Booking alone can be rerun without --register; put the
+registered account you want to use under login for that run. No automatic signup retries.

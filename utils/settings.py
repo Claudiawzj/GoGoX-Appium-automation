@@ -47,6 +47,25 @@ def load_login_credentials():
     return login["email"], login["password"]
 
 
+def load_registration_credentials():
+    """Keep new-account input separate from the repeatable existing login data."""
+    data = _load_private_test_data()
+    registration = data.get("registration")
+    if not isinstance(registration, dict) or registration.get("method") != "email":
+        raise ValueError("Local test data needs registration with method: email.")
+    if any(not isinstance(registration.get(key), str) or not registration[key].strip()
+           for key in ("email", "password")):
+        raise ValueError("Fill both email and password in the local registration section.")
+    email = registration["email"]
+    login = data.get("login")
+    existing = login.get("email", "") if isinstance(login, dict) else ""
+    if not isinstance(existing, str):
+        existing = ""
+    if email.strip().casefold() == existing.strip().casefold():
+        raise ValueError("Registration must use a different, unused email from login.")
+    return email, registration["password"]
+
+
 def load_route_data():
     """Load queries and exact observed results; never choose the first fuzzy match."""
     booking = _load_private_test_data().get("booking")

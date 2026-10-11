@@ -5,7 +5,7 @@ login:
   email: ""
   password: ""
 # Reserve an unused email for the final recorded full-flow attempt.
-# Registration automation is not implemented yet. Never use login data for signup.
+# Used only with --register. Never use the existing login address for signup.
 registration:
   method: email
   email: ""

@@ -220,3 +220,53 @@ values and successful completion, not absence of every transient edit menu.
 Latest private report: reports/transport-booking.html; console log and final screenshot
 are from this run. No recording or registration performed. Phone remains at Review.
 Fresh-registration implementation and full assignment recording remain pending.
+
+### Registration recording preparation — 11 October 2026
+
+User filled registration email/password privately and requested code changes only;
+explicitly leave phone execution and screen recording to the user. Both registration
+and existing-login credentials are present; no values printed. Prepared uncommitted
+registration credential loader, --register option and Settings/Profile sign-out helper
+using cached observed locators. These drafts are not yet integrated into the booking
+test: do not instruct the user to run --register until integration is complete.
+
+Registration form evidence is missing. Asked user to sign out, enter the unused email,
+tap Next and report the title, fields and submit label, stopping before account creation.
+Need that information to finish registration locators/actions without inventing controls.
+No device session, account creation, pytest execution, recording or GitHub push performed.
+Existing booking test still performs existing-account login only. Preserve both private
+credential sections and stop at Review with HK$20 tip. Next: integrate registration,
+explicit logout/login and existing booking flow; perform offline checks only, then give
+user the recording command with --register. No automation execution by the assistant.
+
+### New-account recording mode implemented — 11 October 2026
+
+User supplied signup screenshot: “Sign up for a Hong Kong account”, Name (Optional),
+Password, two already-selected checkboxes and Sign up. Implemented RegistrationPage
+and separate locators from that screenshot plus existing login control conventions.
+Native signup identifiers remain unverified; password and submit use guarded semantic
+predicates/visible labels with unique visible matching. Optional name stays blank;
+checkboxes stay untouched. Signup is submitted once, followed by Transport/Personal
+account assertions, Settings → Personal → Profile sign out, guest assertion, and one
+login using the new registration credentials. Existing login data is never overwritten.
+
+The same test now accepts --register, restricted during collection to this single test
+with --device. It requires a signed-out start and rejects a registration address matching
+existing login. Without --register, existing booking/login behavior is retained. No
+signup or password retries and no order-submission method. Stop at Review with HK$20.
+Private registration fields validate without printing values. No device session/run was
+performed, per the user's explicit request. Six offline credential-separation tests
+passed; the new command collects one device test; an incorrect --register target is
+rejected during collection. Initial offline fixture omitted method: email; corrected
+that fixture, all six pass. No fresh-account success or recording claimed.
+
+User recording command (Appium already running):
+.venv/bin/python -m pytest tests/test_transport_booking.py --device --register --html=reports/full-flow.html --self-contained-html
+Return from the unsubmitted form to English Transport while signed out, connect/unlock
+phone, start recording, then execute. Signup consumes the email only if creation occurs;
+a later booking failure does not make it unused again. Check app/account state before
+repeating --register. A further complete registration recording may need another unused
+email; a repeatable booking can use the now-registered credentials under login without
+--register. User owns the first device verification and video recording. Existing
+125.67-second booking report remains unchanged. Next: inspect user's full-flow report
+and recording; address any actual failure, then prepare final delivery notes/packaging.

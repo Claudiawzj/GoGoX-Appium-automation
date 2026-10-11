@@ -1,9 +1,10 @@
 # GoGoX Appium assignment
 
-Status: Python/Pytest page objects now cover existing-account login and the
-Transport booking steps through Review with a HK$20 tip. The integrated booking
-test passed on the iPhone: **1 passed in 134.00 seconds while already signed in** on 10 October 2026. Fresh-account registration and the demo
-recording remain pending; an existing-account run does not complete the assignment.
+Status: Python/Pytest page objects cover existing-account login and Transport booking
+through Review with a HK$20 tip. The latest device booking run passed in **125.67 seconds**
+on 10 October 2026. Opt-in fresh registration followed by logout/login is implemented
+for the user-run recording, but has not been executed or verified on the device.
+The complete fresh-account run and demo recording remain pending.
 See GETTING_STARTED.md for the earlier checkpoint results and current run record.
 
 ## Selected tools
@@ -101,7 +102,7 @@ no taps. Do not silently clear an existing draft route to make it pass.
 Copy config/data.example.yaml to config/data.local.yaml. Put the registered account's
 email/password in the `login` section on your own Mac. Leave `registration` blank
 until preparing the final recorded attempt. The local file is ignored by Git.
-Registration automation is not implemented yet.
+Use `--register` only for the deliberate new-account recording described below.
 
 The existing-account login checkpoint requires the English Transport home screen,
 empty From/To fields and a signed-out account. It submits login once and verifies
@@ -170,7 +171,7 @@ email; GoGoX email reuse and deletion behavior have not been verified.
 
 ## Structure and safeguards
 
-- pages: Home, menu/login, location, pickup/time/vehicle, order details and review actions; separate locator modules.
+- pages: Home, menu/login/registration/account, location, pickup/time/vehicle, order details and review actions; separate locator modules.
 - tests: test logic and checkpoint assertions.
 - utils: reusable helpers and configuration loading.
 - config: capabilities and external login/route test data.
@@ -183,8 +184,8 @@ place or confirm an order. No order-submission action will be implemented.
 
 The user approved IFC Mall → Harbour City and Cross-Harbour Tunnel (Hung Hom) for
 practice. The mall results at Finance Street and Canton Road have been inspected.
-Remaining test data and booking locators still need inspection. Registration
-prerequisites and implementation remain pending.
+Reusable booking locators have been verified. The new registration controls are
+screenshot-derived and await their first device run; no registration success is claimed.
 Rehearse the reusable steps first, then record the complete fresh-registration attempt
 from its start. Review the recording and results before submission packaging.
 
@@ -223,7 +224,7 @@ has no footer click or submission method.
 
 The booking test now supports both signed-out and signed-in starts. Use the same
 command above. Existing login data stays under login in the ignored private file;
-registration remains separate and blank for the future new-account recording.
+registration stays separate and is used only for the opt-in new-account recording.
 Unknown menu state or failed login stops the test before booking. The password is
 submitted once; no automatic password retries. A signed-out booking attempt before
 this fix reached guest Order details without Cargo compensation and timed out.
@@ -252,3 +253,41 @@ is not cleared. Existing content is replaced only when necessary; an empty optio
 extension is left alone. All contact values and the saved summary remain asserted.
 The full booking test with this change passed in **125.67 seconds**, ending at Review
 with HK$20 tip. No order was submitted.
+
+## Record the new-account flow
+
+Fill the unused email/password under registration in config/data.local.yaml; keep
+existing login data unchanged. Return to the English Transport home while signed out.
+Keep the iPhone connected/unlocked. Start Appium with npm start only if it is not
+already running; an existing server on port 4723 should be reused.
+Start screen recording before running this command in a second terminal:
+
+```sh
+cd /Users/claudia_wzj/Documents/GOGOX/automation
+.venv/bin/python -m pytest tests/test_transport_booking.py --device --register --html=reports/full-flow.html --self-contained-html
+```
+
+With --register the test requires a guest account, enters the unused email, waits
+for “Sign up for a Hong Kong account”, types the password, leaves Name (Optional)
+blank and the screenshot's selected checkboxes unchanged, then taps Sign up once.
+It verifies the Personal account, signs out using Settings → Personal → Profile,
+verifies guest state, and logs in once using those same new credentials. The existing
+login section is not overwritten. Then it performs the verified booking steps and
+ends at Review with the HK$20 tip. Stop the screen recording when the test finishes.
+
+Registration is implemented from the user's 11 October screenshot. Password and
+signup locators match semantic identifiers or visible labels and require a unique
+visible match; their native identifiers have not been captured or verified. The
+signup title must match before any signup action. The supplied form has no email
+verification step; if verification or another screen appears, the test stops rather
+than silently omitting it. Optional name is intentionally left blank. No phone test
+was run by the assistant for this implementation, at the user's explicit request.
+
+If signup succeeds but a later step fails, the address is now registered. Do not
+repeat --register with it: use another unused email for a fresh full recording, or
+rerun booking without --register. To reuse the newly created account for booking,
+copy its credentials into login locally; this is an existing-account run, not a
+repeat registration. There are no automatic signup or password retries.
+
+Offline configuration tests: .venv/bin/python -m pytest tests/test_registration_settings.py
+The --register option is restricted to this single booking test with --device.
