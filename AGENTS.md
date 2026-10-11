@@ -318,3 +318,12 @@ and console log (128.66-second recovery); transport-booking-final.png. All ignor
 private. Old transport-booking.html remains a previous user run; do not conflate reports.
 Next: user fresh-account recording verifies uninterrupted signup and promotion dismissal;
 inspect actual result/video before marking the full assignment run complete.
+
+### README condensed — 11 October 2026
+
+At the user's request, shortened README from 325 lines / 2,558 words to 123 lines /
+720 words. Retained coverage/status, stop boundary, prerequisites, setup/configuration,
+connection/practice/registration/offline commands and report structure. Detailed run
+history remains in GETTING_STARTED.md, linked from README. Checked document links,
+test paths, code fences and whitespace. Documentation only; no phone run or signup.
+Uninterrupted fresh-account verification and demo remain pending.

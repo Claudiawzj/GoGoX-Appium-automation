@@ -1,37 +1,50 @@
-# GoGoX Appium assignment
+# GoGoX Appium automation
 
-Status: Python/Pytest page objects cover existing-account login and Transport booking
-through Review with a HK$20 tip. The latest recovery booking run passed in **128.66 seconds**
-on 11 October 2026. Fresh signup was submitted once with the user-authorized spare account on
-11 October 2026, then a promotion overlay interrupted the home-screen assertion.
-The account was verified signed in on recovery. The complete uninterrupted
-fresh-account run and demo recording remain pending.
-See GETTING_STARTED.md for the earlier checkpoint results and current run record.
+Automates the Hong Kong iOS Transport flow using **Python/Pytest**, my preferred
+framework for this assignment, with Appium/XCUITest and pytest-html reporting.
+Page Object Model separates locators, page actions and test logic; tests use explicit
+waits, checkpoint assertions and step logging.
 
-## Selected tools
+**Stop boundary: end at Review with a HK$20 tip. Never place or confirm an order.**
+ReviewPage has no order-submission action.
 
-Python/Pytest, Appium 3.8.0, XCUITest 12.16.0 and pytest-html. Stable Appium and driver
-versions were checked against the official npm registry on 10 October 2026. Python
-dependency versions are captured in requirements.txt after installation.
+## Status and coverage
+
+Verified on iPhone 13 Pro, iOS 26.3, GoGoX 7.111.0 (Hong Kong).
+The latest recovery booking run passed in **128.66 seconds on 11 October 2026**.
+Registration and its automatic sign-in were confirmed across a signup attempt and
+recovery; an uninterrupted fresh-account run and demo recording remain pending.
+Known promotion dismissal is implemented but has not yet been exercised on-device.
+
+The booking test covers:
+
+1. Existing-account login when signed out, or opt-in new-account registration.
+2. IFC Mall → Harbour City; future pickup (Hong Kong date +2 days, 14:00),
+   Hourly Rental – 4 hours, and Van.
+3. Cargo Compensation: Basic $10; 3 passengers; Premium; Rent a Cart +1;
+   goods longer than 6ft; pet-friendly and English-speaking drivers;
+   Cross-Harbour Tunnel (Hung Hom); Move-to-door.
+4. Review Order, saved dummy contact details, HK$20 tip and summary assertions.
+
+In this app version, contact entry occurs **after Review Order**. Registration mode
+verifies automatic sign-in and continues to booking; it does not perform a separate
+password login. Route, pickup plan and contact data are externally configured.
 
 ## Prerequisites
 
-A Mac with suitable Xcode, connected/trusted iPhone, Developer Mode and Enable UI
-Automation enabled, GoGoX installed, Node.js compatible with Appium, and Python.
-WebDriverAgent needs signing configured through an Apple account in Xcode. Complete
-this setup before attempting the connection test.
+- Mac with Xcode and an Apple account configured for WebDriverAgent signing.
+- Connected, unlocked and trusted iPhone with Developer Mode and Enable UI Automation
+  enabled; trust the signed developer app under Settings → General → VPN & Device Management.
+- GoGoX installed in the Hong Kong market with the English UI.
+- Node.js/npm and Python. Tested with Node 24.14.1, Python 3.14.3 and Xcode 16.4.
 
-The initial connection attempt built WebDriverAgent successfully with Xcode 16.4
-and the selected Personal Team. The iPhone refused its launch because developer
-trust is required. Complete Settings → General → VPN & Device Management →
-Developer App → Trust for that Personal Team account, then retry. The attempt did
-not reach the GoGoX foreground assertion and performed no booking actions. The user
-then completed trust, and the retry launched GoGoX and passed its foreground check.
-The connection test makes no taps and starts no booking.
+Pinned tooling: Appium **3.8.0**, XCUITest **12.16.0**; stable versions were checked
+against the official npm registry on 10 October 2026. Python dependencies are locked
+in [requirements.txt](requirements.txt).
 
-## Install
+## Setup
 
-Open a terminal in this automation directory:
+From the cloned repository directory:
 
 ```sh
 npm ci
@@ -41,285 +54,70 @@ python3 -m venv .venv
 npm run doctor
 ```
 
-The Appium server and driver are stored inside this project. The Python environment
-also stays in this project. Keep generated directories out of the submission ZIP.
-requirements.in lists direct Python dependencies; requirements.txt locks the installed
-versions, including their dependencies.
+Create `config/device.local.yaml` from [device.example.yaml](config/device.example.yaml)
+and `config/data.local.yaml` from [data.example.yaml](config/data.example.yaml).
+Fill the device ID, app bundle ID, signing team and unique WDA bundle ID locally.
+Set registered credentials under `login`, unused credentials under `registration`
+only for a fresh-account attempt, and dummy details under `booking.contact`.
+Keep the two account sections separate. Local configuration is ignored by Git.
 
-## Version control
+## Run
 
-This project is prepared for GitHub delivery. Only source files, dependency locks and
-documentation belong in the repository. Local device/signing configuration, installed
-tools and raw test reports are excluded by .gitignore. The existing manual report and
-original screenshots remain outside this automation repository.
-
-## Configure
-
-Copy config/device.example.yaml to config/device.local.yaml. Populate the actual
-device identifier, verified GoGoX bundle identifier, signing team and unique WDA bundle
-identifier during guided setup. Do not guess these values. The local file is excluded
-from version control. The server listens on this Mac only.
-
-## Run the first connection check
-
-Start Appium in one terminal:
+Start Appium in one terminal; reuse an existing server on port 4723:
 
 ```sh
 npm start
 ```
 
-In another terminal in the same automation directory:
+Run tests in a second terminal from the repository directory, with the phone connected
+and unlocked. First verify the connection (launches GoGoX without tapping controls):
 
 ```sh
-.venv/bin/python -m pytest --device tests/test_connection.py --html=reports/connection.html --self-contained-html
+.venv/bin/python -m pytest tests/test_connection.py --device --html=reports/connection.html --self-contained-html
 ```
 
-This launches the configured app and explicitly waits for its foreground state. It
-does not tap controls or start a booking. An unconfigured device run fails with the
-missing configuration fields. Running without --device skips the device test; a skip
-is not proof that automation works.
-
-## Inspect and verify the initial screen
-
-Capture an actual screenshot and UI hierarchy without tapping controls:
-
-```sh
-.venv/bin/python -m utils.inspect_screen
-```
-
-The helper waits explicitly for visible controls, then saves private evidence under
-reports/inspection. It does not assume that the app's foreground state means it has
-finished loading. Raw evidence can contain personal information and stays out of Git.
-
-Check the inspected Home Page locators on the actual phone:
-
-```sh
-.venv/bin/python -m pytest --device tests/test_home_controls.py --html=reports/home-controls.html --self-contained-html
-```
-
-This check expects the English Transport screen with empty From/To fields. It makes
-no taps. Do not silently clear an existing draft route to make it pass.
-
-Copy config/data.example.yaml to config/data.local.yaml. Put the registered account's
-email/password in the `login` section on your own Mac. Leave `registration` blank
-until preparing the final recorded attempt. The local file is ignored by Git.
-Use `--register` only for the deliberate new-account recording described below.
-
-The existing-account login checkpoint requires the English Transport home screen,
-empty From/To fields and a signed-out account. It submits login once and verifies
-the Transport screen and menu's authenticated state. It fails if already signed in;
-sign out in the app before deliberately repeating this checkpoint. No account
-creation, password-reset action or booking action is included.
-
-```bash
-.venv/bin/python -m pytest tests/test_login.py --device --html=reports/login.html --self-contained-html
-```
-
-Use the project's `npm start` command with warning-level Appium logging when entering
-credentials. Verbose HTTP/debug logs can contain typed text. Test step logs omit
-credential values; raw screen inspections and reports stay private until reviewed.
-
-The route checkpoint requires a signed-in account at the English Transport home
-screen. It deliberately replaces both route fields with the configured practice
-locations, selects the exact observed search-result names, verifies the saved
-addresses and taps Next. It ends at Time and vehicle without choosing pickup time,
-rental duration or extras, and never places an order.
-
-```bash
-.venv/bin/python -m pytest tests/test_route.py --device --html=reports/route.html --self-contained-html
-```
-
-Location selection may return automatically or retain the resolved address in the
-editor. The page object waits for the full selected address, taps Done only if the
-editor remains after results disappear, then verifies the saved home field. Home field locators
-distinguish the pickup and destination cells, and exact result names are external
-data so shops inside the mall cannot be silently selected instead.
-
-The time/vehicle checkpoint starts at Time and vehicle with the approved route
-already saved. It selects a pickup two days ahead at 14:00 in Hong Kong time,
-four-hour rental and Van, verifies all three and taps Next. It ends at Order details
-with Cargo compensation visible. It does not select Basic or any extras yet.
-
-```bash
-.venv/bin/python -m pytest tests/test_time_vehicle.py --device --html=reports/time-vehicle.html --self-contained-html
-.venv/bin/python -m pytest tests/test_pickup_plan.py
-```
-
-`booking.pickup.days_ahead` and `time_24h` externalize the pickup plan. The date is
-recalculated for each run in Asia/Hong_Kong, and invalid/past-day or non-ten-minute
-slots fail rather than use ASAP. Device selectors require the English UI. iOS picker
-times use a narrow nonbreaking space before am/pm; the picker action supplies that
-exact format, while assertions normalize spacing. Van is verified using the check
-mark inside its own card, not a check mark anywhere on screen.
-
-The time/vehicle page's Next button has a shared internal ID containing review_order.
-Its action is scoped to the Time and vehicle title and verified selections. Do not
-reuse it as a generic footer action or order-submission command.
-
-Run checkpoint tests individually in their stated starting screens. They are not
-yet a complete suite with automated state setup; do not run all device tests as
-proof of the full assignment flow. To repeat the route checkpoint after it passes,
-tap Back from Time and vehicle to return to home.
-To repeat the time/vehicle checkpoint, tap Back from Order details to Time and vehicle.
-
-Reserve the unused email for the final recorded full-flow attempt. During development,
-inspect registration without submitting it and exercise login/booking with an existing
-test account. Start recording before creating the new account. Existing-account runs
-verify reusable steps but do not satisfy the required new-account registration step.
-Do not automatically retry signup after successful creation or an uncertain submission
-outcome. A repeat of the complete fresh-registration flow may require another unused
-email; GoGoX email reuse and deletion behavior have not been verified.
-
-## Structure and safeguards
-
-- pages: Home, menu/login/registration, location, pickup/time/vehicle, order details and review actions; separate locator modules.
-- tests: test logic and checkpoint assertions.
-- utils: reusable helpers and configuration loading.
-- config: capabilities and external login/route test data.
-- reports: HTML reports, step logs and selected evidence.
-
-The full flow must include registration/login, route, future pickup date/time,
-4-hour hourly rental, Van, Basic $10, all requested extras, dummy contacts and $20 tip.
-Record the installed app's contact-entry sequence discrepancy. Stop at review; never
-place or confirm an order. No order-submission action will be implemented.
-
-The user approved IFC Mall → Harbour City and Cross-Harbour Tunnel (Hung Hom) for
-practice. The mall results at Finance Street and Canton Road have been inspected.
-Reusable booking locators have been verified. Registration controls have now been captured on the phone. Signup and subsequent
-authenticated state were observed across a failed attempt and recovery; an uninterrupted
-fresh-account run remains pending.
-Rehearse the reusable steps first, then record the complete fresh-registration attempt
-from its start. Review the recording and results before submission packaging.
-
-## Run the booking practice from Transport
-
-Keep the iPhone connected and unlocked with Appium running. The test checks the
-account menu, logs in once using config/data.local.yaml login credentials if it finds
-a guest, and verifies the Personal account before booking. It skips password entry
-when already signed in. Populate booking.contact in the private data file with dummy details. This
-test restarts GoGoX without resetting account data, verifies that the account is signed in,
-enters the approved route, sets
-future pickup/four-hour Van, selects all required extras, saves contacts on Review,
-adds HK$20 tip, verifies the fee breakdown, captures evidence and stops.
+**Repeatable booking practice:** supports signed-in or signed-out starts, using
+`login` credentials when needed. Restarts GoGoX, rebuilds the draft and stops at Review.
 
 ```sh
 .venv/bin/python -m pytest tests/test_transport_booking.py --device --html=reports/transport-booking.html --self-contained-html
 ```
 
-The custom plus and checkbox controls expose no accessible identifiers or selected
-state. Their taps are anchored to the inspected semantic row at its right edge.
-Passenger/cart counts are checked immediately; required extras and prices are
-verified in the Review fee breakdown, including Driver tip $20 and Basic $10.
-The unchecked toggles require a fresh draft; restart provides that observed initial
-state and passenger/cart guards reject an already edited draft. Do not resume this
-method halfway through selected extras. Raw screenshots/reports remain local.
-
-In this app version, Order contact info is edited after Review Order. Its three
-unnamed fields are identified by vertical order (name, phone, optional extension),
-reacquired after each edit and verified before Save. The saved contact summary is
-also asserted. Contact Save and tunnel-sheet Confirm are guarded by their sheet
-content. The footer shares the same identifier on Next, Review and Place order;
-only the first two are implemented, with the corresponding page guard. ReviewPage
-has no footer click or submission method.
-
-### Signed-out start
-
-The booking test now supports both signed-out and signed-in starts. Use the same
-command above. Existing login data stays under login in the ignored private file;
-registration stays separate and is used only for the opt-in new-account recording.
-Unknown menu state or failed login stops the test before booking. The password is
-submitted once; no automatic password retries. A signed-out booking attempt before
-this fix reached guest Order details without Cargo compensation and timed out.
-
-### Startup and text entry
-
-The booking test is marked restart_app. Its fixture sets appium:autoLaunch to false
-for that test only; the test then terminates/activates GoGoX once. Other checkpoint
-tests retain their original automatic launch. Previously the session launched GoGoX
-and the test restarted it, producing two visible launches.
-
-Login uses element.send_keys, not a clipboard or Paste action. The installed iPhone
-helper implements this as synthesized text input. A visible iOS Paste edit menu does
-not establish that the test pasted anything. A controlled check reproduced it by
-tapping an already focused email field again. Login now leaves focus to send_keys
-and performs no separate field.click; the corrected login checkpoint passed.
-
-Van selection now waits for consecutive matching full-card rectangles and taps the
-Van Cell rather than its label, then checks card-check inside that same Van Cell.
-The failed run stopped on this assertion; a later inspection showed 5.5t Truck selected.
-The exact cause of that earlier tap outcome remains unestablished. No fallback to a
-truck is allowed and Next is guarded by the verified Van selection.
-
-Contact entry also leaves focus to Appium: no separate field tap, and an empty field
-is not cleared. Existing content is replaced only when necessary; an empty optional
-extension is left alone. All contact values and the saved summary remain asserted.
-The full booking test with this change passed in **125.67 seconds**, ending at Review
-with HK$20 tip. No order was submitted.
-
-## Record the new-account flow
-
-Fill the unused email/password under registration in config/data.local.yaml; keep
-existing login data unchanged. Return to the English Transport home while signed out.
-Keep the iPhone connected/unlocked. Start Appium with npm start only if it is not
-already running; an existing server on port 4723 should be reused.
-Start screen recording before running this command in a second terminal:
+**Fresh-account demo:** use a different unused registration email, manually sign out
+and return to English Transport. Start screen recording **before** running:
 
 ```sh
-cd /Users/claudia_wzj/Documents/GOGOX/automation
 .venv/bin/python -m pytest tests/test_transport_booking.py --device --register --html=reports/full-flow.html --self-contained-html
 ```
 
-With --register the test requires a guest account, enters the unused email, waits
-for “Sign up for a Hong Kong account”, types the password, leaves Name (Optional)
-blank and the screenshot's selected checkboxes unchanged, then taps Sign up once.
-It verifies that registration has automatically signed in the Personal account,
-then continues directly to booking. No extra logout/login is performed. The existing
-login section is not overwritten. It performs the verified booking steps and
-ends at Review with the HK$20 tip. Stop the screen recording when the test finishes.
+Stop recording when the test finishes. Signup and passwords are submitted once, with
+no automatic retries. If account creation occurs before a later failure, that email
+is registered; check account state before retrying. A new fresh-account recording
+needs another unused email. `--register` requires `--device` and this single test.
 
-Registration controls were captured from the installed app on 11 October 2026.
-Password uses login_password__input__password and Sign up reuses
-login_password__button__login. The initial screenshot-derived signup selector did
-not match that shared identifier and stopped before password entry or submission.
-The signup title must match before any signup action. Automatic sign-in after registration
-covers the login checkpoint in this mode, at the user’s request; authenticated menu
-state is asserted before booking. The supplied form has no email
-verification step; if verification or another screen appears, the test stops rather
-than silently omitting it. Optional name is intentionally left blank. The user initially requested code changes only, then authorized a spare-account
-phone run after the signup-selector failure. Signup was submitted once, but a promotion
-overlay interrupted the following home assertion. No automatic signup retry occurred.
-The observed promotion close identifier is braze.in-app-message.close-button.title;
-booking waits now dismiss only that recognized overlay while waiting for Transport.
-Read-only home checks retain their original behavior.
+Offline checks (no phone required):
 
-If signup succeeds but a later step fails, the address is now registered. Do not
-repeat --register with it: use another unused email for a fresh full recording, or
-rerun booking without --register. To reuse the newly created account for booking,
-copy its credentials into login locally; this is an existing-account run, not a
-repeat registration. There are no automatic signup or password retries.
+```sh
+.venv/bin/python -m pytest tests/test_pickup_plan.py tests/test_registration_settings.py
+```
 
-Offline configuration tests: .venv/bin/python -m pytest tests/test_registration_settings.py
-The --register option is restricted to this single booking test with --device.
+Device tests without `--device` are skipped. Run individual checkpoint tests only
+from their documented starting screens; they are not a state-independent suite.
 
-### Registration failure diagnosis — 11 October 2026
+## Structure and reports
 
-The first user-run failure (45.65 seconds) stopped before password entry because
-the Sign up locator missed GoGoX's shared login_password__button__login identifier.
-Captured exact password/submit identifiers on the signup screen and replaced the
-inferred selector. One authorized spare-account attempt then typed the password and
-submitted Sign up once. It failed after 50.45 seconds waiting for Transport because
-a ChargeSPOT promotion covered the home controls. Inspection captured its close ID.
+| Directory | Contents |
+| --- | --- |
+| `pages/` | Page actions and separate `locators/` modules |
+| `tests/` | Booking flow, device checkpoints and offline tests |
+| `utils/` | Configuration, pickup planning and screen inspection helpers |
+| `config/` | Shareable examples and ignored local capabilities/test data |
+| `reports/` | Generated HTML reports, logs and screenshots (ignored) |
 
-Signup did create the account: a subsequent booking run verified Personal/signed-in
-state without submitting a password or registering again, then passed in **128.66
-seconds**, ending at Review with HK$20 tip. This verifies signup/account state and
-booking across separate attempts, not an uninterrupted fresh-account success.
-Private recovery report: reports/transport-booking-after-registration.html.
-The known promotion-close handling is implemented for booking waits; the recovery
-restart removed the popup, so this run did not exercise the close branch on-device.
-A further fresh recording will verify that branch. Read-only checkpoint waits do
-not dismiss promotions.
+The booking test saves `reports/transport-booking-final.png`. Use the project's
+warning-level Appium logging; review raw evidence for private data before sharing.
+Device/signing values, credentials, installed tools and raw reports are excluded
+from Git. The manual report and original evidence are delivered separately.
 
-The spare email is now registered. For the complete recording, use a different unused
-registration email, sign out manually, start recording, then use the same --register
-command. No order placed and no video recorded by the assistant.
+See [GETTING_STARTED.md](GETTING_STARTED.md) for beginner guidance, checkpoint
+results and troubleshooting history.
