@@ -11,6 +11,7 @@ class RegistrationPage(LoginPage):
         logging.info("STEP: Enter the unused email from private registration data")
         self._type_private(auth.EMAIL, email)
         self.visible_control(auth.EMAIL_NEXT).click()
+        logging.info("STEP: Verify the signup title, password field and Sign up control")
         # An already registered address leads to login, not this title. Never
         # treat that as successful registration or silently reuse the account.
         self.visible_control(registration.TITLE)

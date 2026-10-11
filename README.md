@@ -1,10 +1,11 @@
 # GoGoX Appium assignment
 
 Status: Python/Pytest page objects cover existing-account login and Transport booking
-through Review with a HK$20 tip. The latest device booking run passed in **125.67 seconds**
-on 10 October 2026. Opt-in fresh registration with automatic sign-in verification is implemented
-for the user-run recording, but has not been executed or verified on the device.
-The complete fresh-account run and demo recording remain pending.
+through Review with a HK$20 tip. The latest recovery booking run passed in **128.66 seconds**
+on 11 October 2026. Fresh signup was submitted once with the user-authorized spare account on
+11 October 2026, then a promotion overlay interrupted the home-screen assertion.
+The account was verified signed in on recovery. The complete uninterrupted
+fresh-account run and demo recording remain pending.
 See GETTING_STARTED.md for the earlier checkpoint results and current run record.
 
 ## Selected tools
@@ -184,8 +185,9 @@ place or confirm an order. No order-submission action will be implemented.
 
 The user approved IFC Mall → Harbour City and Cross-Harbour Tunnel (Hung Hom) for
 practice. The mall results at Finance Street and Canton Road have been inspected.
-Reusable booking locators have been verified. The new registration controls are
-screenshot-derived and await their first device run; no registration success is claimed.
+Reusable booking locators have been verified. Registration controls have now been captured on the phone. Signup and subsequent
+authenticated state were observed across a failed attempt and recovery; an uninterrupted
+fresh-account run remains pending.
 Rehearse the reusable steps first, then record the complete fresh-registration attempt
 from its start. Review the recording and results before submission packaging.
 
@@ -275,15 +277,20 @@ then continues directly to booking. No extra logout/login is performed. The exis
 login section is not overwritten. It performs the verified booking steps and
 ends at Review with the HK$20 tip. Stop the screen recording when the test finishes.
 
-Registration is implemented from the user's 11 October screenshot. Password and
-signup locators match semantic identifiers or visible labels and require a unique
-visible match; their native identifiers have not been captured or verified. The
-signup title must match before any signup action. Automatic sign-in after registration
+Registration controls were captured from the installed app on 11 October 2026.
+Password uses login_password__input__password and Sign up reuses
+login_password__button__login. The initial screenshot-derived signup selector did
+not match that shared identifier and stopped before password entry or submission.
+The signup title must match before any signup action. Automatic sign-in after registration
 covers the login checkpoint in this mode, at the user’s request; authenticated menu
 state is asserted before booking. The supplied form has no email
 verification step; if verification or another screen appears, the test stops rather
-than silently omitting it. Optional name is intentionally left blank. No phone test
-was run by the assistant for this implementation, at the user's explicit request.
+than silently omitting it. Optional name is intentionally left blank. The user initially requested code changes only, then authorized a spare-account
+phone run after the signup-selector failure. Signup was submitted once, but a promotion
+overlay interrupted the following home assertion. No automatic signup retry occurred.
+The observed promotion close identifier is braze.in-app-message.close-button.title;
+booking waits now dismiss only that recognized overlay while waiting for Transport.
+Read-only home checks retain their original behavior.
 
 If signup succeeds but a later step fails, the address is now registered. Do not
 repeat --register with it: use another unused email for a fresh full recording, or
@@ -293,3 +300,26 @@ repeat registration. There are no automatic signup or password retries.
 
 Offline configuration tests: .venv/bin/python -m pytest tests/test_registration_settings.py
 The --register option is restricted to this single booking test with --device.
+
+### Registration failure diagnosis — 11 October 2026
+
+The first user-run failure (45.65 seconds) stopped before password entry because
+the Sign up locator missed GoGoX's shared login_password__button__login identifier.
+Captured exact password/submit identifiers on the signup screen and replaced the
+inferred selector. One authorized spare-account attempt then typed the password and
+submitted Sign up once. It failed after 50.45 seconds waiting for Transport because
+a ChargeSPOT promotion covered the home controls. Inspection captured its close ID.
+
+Signup did create the account: a subsequent booking run verified Personal/signed-in
+state without submitting a password or registering again, then passed in **128.66
+seconds**, ending at Review with HK$20 tip. This verifies signup/account state and
+booking across separate attempts, not an uninterrupted fresh-account success.
+Private recovery report: reports/transport-booking-after-registration.html.
+The known promotion-close handling is implemented for booking waits; the recovery
+restart removed the popup, so this run did not exercise the close branch on-device.
+A further fresh recording will verify that branch. Read-only checkpoint waits do
+not dismiss promotions.
+
+The spare email is now registered. For the complete recording, use a different unused
+registration email, sign out manually, start recording, then use the same --register
+command. No order placed and no video recorded by the assistant.

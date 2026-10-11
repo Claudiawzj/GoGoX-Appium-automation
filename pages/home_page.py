@@ -7,12 +7,30 @@ from pages.locators import home
 
 
 class HomePage(BasePage):
-    def wait_for_transport_screen(self):
-        self.visible_control(home.MENU)
-        self.visible_control(home.TRANSPORT)
-        self.visible_control(home.FROM_FIELD)
-        self.visible_control(home.TO_FIELD)
-        self.visible_control(home.NEXT)
+    def wait_for_transport_screen(self, dismiss_promotion=False):
+        controls = (home.MENU, home.TRANSPORT, home.FROM_FIELD, home.TO_FIELD, home.NEXT)
+        if dismiss_promotion:
+            def ready(session):
+                closes = [e for e in session.find_elements(*home.PROMOTION_CLOSE)
+                          if e.is_displayed()]
+                if len(closes) > 1:
+                    raise ValueError("Multiple promotion close controls are visible.")
+                if closes:
+                    logging.info("STEP: Close the observed promotion overlay to reach Transport")
+                    closes[0].click()
+                    return False
+                for locator in controls:
+                    matches = [e for e in session.find_elements(*locator) if e.is_displayed()]
+                    if len(matches) > 1:
+                        raise ValueError("A Transport control matched multiple visible elements.")
+                    if not matches:
+                        return False
+                return True
+
+            self.wait.until(ready, message="Transport controls did not appear after promotion handling.")
+        else:
+            for locator in controls:
+                self.visible_control(locator)
         return self
 
     def wait_for_empty_transport_screen(self):

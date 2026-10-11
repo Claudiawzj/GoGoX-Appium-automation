@@ -26,7 +26,7 @@ def test_transport_to_review_with_twenty_dollar_tip(driver, device_settings, req
     logging.info("STEP: Restart GoGoX, preserving saved account state")
     driver.terminate_app(bundle)
     driver.activate_app(bundle)
-    home = HomePage(driver, wait).wait_for_transport_screen()
+    home = HomePage(driver, wait).wait_for_transport_screen(dismiss_promotion=True)
     assert home.transport_is_selected(), "Transport must be the selected service."
     account_menu = MenuPage(driver, wait).open()
     register = request.config.getoption("--register")
@@ -40,7 +40,7 @@ def test_transport_to_review_with_twenty_dollar_tip(driver, device_settings, req
         try:
             signup = RegistrationPage(driver, wait).enter_unused_email(email)
             signup.submit_new_password(password)
-            home.wait_for_transport_screen()
+            home.wait_for_transport_screen(dismiss_promotion=True)
             account_menu.open().wait_for_signed_in()
             logging.info("STEP: Verify registration signed in the Personal account; continue booking")
         except Exception:
@@ -55,7 +55,7 @@ def test_transport_to_review_with_twenty_dollar_tip(driver, device_settings, req
         try:
             login = LoginPage(driver, wait).enter_existing_email(email)
             login.submit_existing_password(password)
-            home.wait_for_transport_screen()
+            home.wait_for_transport_screen(dismiss_promotion=True)
         except Exception:
             # Suppress nested login frames that could include private arguments.
             raise RuntimeError("Existing-account login failed; booking was not started. "

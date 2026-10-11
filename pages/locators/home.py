@@ -12,6 +12,7 @@ TRANSPORT = (AppiumBy.ACCESSIBILITY_ID, "Transport")
 FROM = (AppiumBy.ACCESSIBILITY_ID, "Where from?")
 TO = (AppiumBy.ACCESSIBILITY_ID, "Where to?")
 NEXT = (AppiumBy.ACCESSIBILITY_ID, "Next")
+PROMOTION_CLOSE = (AppiumBy.ACCESSIBILITY_ID, "braze.in-app-message.close-button.title")
 # Observed table structure: first Cell is pickup, second Cell is destination.
 # Unlike placeholder labels, these controls work with empty and populated routes.
 FROM_FIELD = (AppiumBy.IOS_CLASS_CHAIN,

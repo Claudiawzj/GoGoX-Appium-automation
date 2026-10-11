@@ -282,3 +282,39 @@ account locator module. Existing-account login without --register remains availa
 Same recording command and Review/HK$20 stop boundary. No phone automation run,
 account creation or recording by the assistant. Registration still awaits user-run
 device verification; only offline collection and syntax checks performed for this edit.
+
+### Signup selector and promotion diagnosis — 11 October 2026
+
+User's 45.65-second --register failure stopped after email/Next, before password entry
+or signup. User explicitly authorized phone execution with a spare email, superseding
+the earlier no-run instruction for this diagnosis. Captured current signup XML/screenshot:
+password login_password__input__password; Sign up reuses login_password__button__login.
+The inferred signup-role predicate did not match. Replaced both with exact IDs, retaining
+the “Sign up for a Hong Kong account” guard. Added a form-control checkpoint log.
+
+One signup attempt with the configured spare data entered password and tapped Sign up
+once, then failed after 50.45 seconds waiting for Home. Captured a ChargeSPOT promotional
+modal over Transport; its close control is braze.in-app-message.close-button.title.
+Added opt-in known-promotion dismissal within explicit Transport waits, enabled only by
+the booking test on startup and after signup/login. Read-only checkpoint behavior is
+unchanged. No unknown dialogs or marketing/content links are tapped. Capture shows
+unique visible matches for signup and promotion identifiers.
+
+Did not repeat signup. A recovery booking test without --register confirmed already
+signed-in Personal state, skipped password submission, and passed in **128.66 seconds**:
+approved route, 13 October 14:00 HKT, four-hour Van, required extras, saved dummy contact,
+Driver tip $20 and Review assertions. No order placed. Recovery restart removed the
+promotion, so the new close branch has not been exercised on the device. Signup and
+booking were verified across separate attempts, not a continuous fresh-account run.
+Spare registration email is now registered. Existing login config was not overwritten.
+Phone at Review; for full recording user needs a different unused registration email
+and manually signed-out Transport before the same --register command. Video pending.
+
+Private files: reports/inspection/registration-failure.xml/.png and
+registration-after-submit.xml/.png; reports/full-flow-signup-control-failure.html
+(original user failure); full-flow-post-signup-promotion-failure.html and full-flow.html
+(50.45-second attempt); full-flow-console.log; transport-booking-after-registration.html
+and console log (128.66-second recovery); transport-booking-final.png. All ignored and
+private. Old transport-booking.html remains a previous user run; do not conflate reports.
+Next: user fresh-account recording verifies uninterrupted signup and promotion dismissal;
+inspect actual result/video before marking the full assignment run complete.

@@ -12,7 +12,7 @@
 
 Python contains the instructions for the test. Pytest runs those instructions and records whether checks pass. Appium receives instructions from Python and sends them to the phone through XCUITest. On a real iPhone, this uses a development-signed helper called WebDriverAgent. Xcode is Apple's software for building and signing that helper.
 
-A locator identifies a particular field or button. Most locators were captured from the installed app. Registration is the current exception: it uses the supplied screenshot and existing control patterns because the user requested no further phone run before recording; those new locators await device verification. A page object groups the actions for a screen. An explicit wait waits until a specific condition is true, such as a button becoming available. An assertion checks an expected result.
+A locator identifies a particular field or button. Locators have been captured from the installed app, including the signup identifiers after the first recording attempt exposed a selector mismatch. A page object groups the actions for a screen. An explicit wait waits until a specific condition is true, such as a button becoming available. An assertion checks an expected result.
 
 ## Setup checks — 10 October 2026
 
@@ -396,9 +396,12 @@ Fresh-registration implementation and full assignment recording remain pending.
 
 ## Your new-account recording — 11 October 2026
 
-The registration code is ready for your first phone check. The assistant did not run
-it on the iPhone or create the account. Six offline configuration checks passed;
-registration controls still need verification in your run.
+The initial recording attempt exposed a signup-selector mismatch. After the user
+authorized a spare-account run, the assistant captured the actual controls and
+submitted signup once. A promotional overlay interrupted the following home assertion;
+the account was confirmed signed in on recovery. The spare email is now registered.
+Use another unused email for the final fresh-account recording. Six offline
+configuration checks passed; an uninterrupted fresh-account recording is still pending.
 
 1. Return from the signup form to the English Transport home while still signed out.
 2. Keep your iPhone connected by USB and unlocked. Keep Appium running in its terminal;
@@ -417,9 +420,31 @@ and verifies its automatic sign-in before booking. Your existing login credentia
 The test leaves optional name blank, submits signup once, verifies the signed-in
 account, then runs the booking through Review with a $20 tip. It never
 places the order. Stop recording after the result appears and keep the video locally.
-Report: reports/full-flow.html. It is not an execution result until you run the test.
+Recording report: reports/full-flow.html. The latest file currently contains the
+post-signup promotion failure, not a successful full recording. Review the result
+after your next run; keep the earlier booking result separate.
 
 If the new account was created before a later failure, that email is now registered.
 Check the account state before retrying: another complete fresh-registration recording
 may need another unused email. Booking alone can be rerun without --register; put the
 registered account you want to use under login for that run. No automatic signup retries.
+
+## Spare-account diagnosis and recovery — 11 October 2026
+
+Actual signup identifiers were captured after the 45.65-second user failure. Sign up
+reuses the app's Log in identifier; the previous selector did not find it and never
+reached password entry. Corrected the selector. The user then authorized a spare-email
+phone run: password entry and one signup submission occurred, but a ChargeSPOT popup
+covered the home screen and caused a 50.45-second timeout.
+
+A subsequent booking test confirmed the Personal account was signed in and passed in
+128.66 seconds, stopping at Review with HK$20 tip. This was recovery after signup, not
+one continuous full-flow run. No second signup or password submission occurred.
+Private report: reports/transport-booking-after-registration.html. The final screenshot
+is transport-booking-final.png; the earlier failed full-flow report is retained.
+
+Added dismissal of the observed promotion close button during booking waits. This
+branch remains to be exercised in a fresh registration run because the recovery restart
+removed the popup. The signup and promotion controls each match one visible element
+in captured app source. For your full recording, use another unused registration email
+and sign out before the same --register command. No order was placed or video recorded.
