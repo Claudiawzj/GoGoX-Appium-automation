@@ -270,3 +270,15 @@ email; a repeatable booking can use the now-registered credentials under login w
 --register. User owns the first device verification and video recording. Existing
 125.67-second booking report remains unchanged. Next: inspect user's full-flow report
 and recording; address any actual failure, then prepare final delivery notes/packaging.
+
+### Continue directly after registration — 11 October 2026
+
+At the user's request, removed the additional logout and password-login after signup.
+The --register branch now verifies Transport and authenticated Personal menu after
+signup, then continues to the same booking flow. Automatic sign-in covers the login
+checkpoint in this mode; record this interpretation in submission assumptions rather
+than claiming a separate password login occurred. Removed the unused AccountPage and
+account locator module. Existing-account login without --register remains available.
+Same recording command and Review/HK$20 stop boundary. No phone automation run,
+account creation or recording by the assistant. Registration still awaits user-run
+device verification; only offline collection and syntax checks performed for this edit.

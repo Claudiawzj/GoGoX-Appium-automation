@@ -2,7 +2,7 @@
 
 Status: Python/Pytest page objects cover existing-account login and Transport booking
 through Review with a HK$20 tip. The latest device booking run passed in **125.67 seconds**
-on 10 October 2026. Opt-in fresh registration followed by logout/login is implemented
+on 10 October 2026. Opt-in fresh registration with automatic sign-in verification is implemented
 for the user-run recording, but has not been executed or verified on the device.
 The complete fresh-account run and demo recording remain pending.
 See GETTING_STARTED.md for the earlier checkpoint results and current run record.
@@ -171,7 +171,7 @@ email; GoGoX email reuse and deletion behavior have not been verified.
 
 ## Structure and safeguards
 
-- pages: Home, menu/login/registration/account, location, pickup/time/vehicle, order details and review actions; separate locator modules.
+- pages: Home, menu/login/registration, location, pickup/time/vehicle, order details and review actions; separate locator modules.
 - tests: test logic and checkpoint assertions.
 - utils: reusable helpers and configuration loading.
 - config: capabilities and external login/route test data.
@@ -270,15 +270,17 @@ cd /Users/claudia_wzj/Documents/GOGOX/automation
 With --register the test requires a guest account, enters the unused email, waits
 for “Sign up for a Hong Kong account”, types the password, leaves Name (Optional)
 blank and the screenshot's selected checkboxes unchanged, then taps Sign up once.
-It verifies the Personal account, signs out using Settings → Personal → Profile,
-verifies guest state, and logs in once using those same new credentials. The existing
-login section is not overwritten. Then it performs the verified booking steps and
+It verifies that registration has automatically signed in the Personal account,
+then continues directly to booking. No extra logout/login is performed. The existing
+login section is not overwritten. It performs the verified booking steps and
 ends at Review with the HK$20 tip. Stop the screen recording when the test finishes.
 
 Registration is implemented from the user's 11 October screenshot. Password and
 signup locators match semantic identifiers or visible labels and require a unique
 visible match; their native identifiers have not been captured or verified. The
-signup title must match before any signup action. The supplied form has no email
+signup title must match before any signup action. Automatic sign-in after registration
+covers the login checkpoint in this mode, at the user’s request; authenticated menu
+state is asserted before booking. The supplied form has no email
 verification step; if verification or another screen appears, the test stops rather
 than silently omitting it. Optional name is intentionally left blank. No phone test
 was run by the assistant for this implementation, at the user's explicit request.

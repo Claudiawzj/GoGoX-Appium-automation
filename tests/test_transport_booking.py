@@ -4,7 +4,6 @@ import logging
 import pytest
 
 from pages.home_page import HomePage
-from pages.account_page import AccountPage
 from pages.location_page import LocationPage
 from pages.login_page import LoginPage
 from pages.menu_page import MenuPage
@@ -43,21 +42,12 @@ def test_transport_to_review_with_twenty_dollar_tip(driver, device_settings, req
             signup.submit_new_password(password)
             home.wait_for_transport_screen()
             account_menu.open().wait_for_signed_in()
-            logging.info("STEP: Verify registration completed before the separate login step")
-            AccountPage(driver, wait).sign_out_from_menu()
-            home.wait_for_transport_screen()
-            account_menu.open()
-            assert account_menu.account_state() == "guest", "Sign out was not verified."
-            account_menu.open_guest_login()
-            login = LoginPage(driver, wait).enter_existing_email(email)
-            login.submit_existing_password(password)
-            home.wait_for_transport_screen()
+            logging.info("STEP: Verify registration signed in the Personal account; continue booking")
         except Exception:
             # Do not expose credential-bearing frames or retry an uncertain signup.
-            raise RuntimeError("Registration or the following login did not complete. "
+            raise RuntimeError("Registration or automatic sign-in did not complete. "
                                "No automatic retry was performed. Check the app/account "
                                "state before repeating --register.") from None
-        account_menu.open()
     elif state == "guest":
         logging.info("STEP: Guest detected; log in with the existing account before booking")
         email, password = load_login_credentials()

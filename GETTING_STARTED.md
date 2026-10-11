@@ -413,9 +413,9 @@ cd /Users/claudia_wzj/Documents/GOGOX/automation
 ```
 
 The addition is --register. This uses only the registration email/password for signup
-and the separate login that follows it. Your existing login credentials are unchanged.
-The test leaves optional name blank, submits signup once, verifies the account, signs
-out and logs in again, then runs the booking through Review with a $20 tip. It never
+and verifies its automatic sign-in before booking. Your existing login credentials are unchanged.
+The test leaves optional name blank, submits signup once, verifies the signed-in
+account, then runs the booking through Review with a $20 tip. It never
 places the order. Stop recording after the result appears and keep the video locally.
 Report: reports/full-flow.html. It is not an execution result until you run the test.
 
